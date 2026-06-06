@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Share2, ArrowRight, Clock, AlertCircle } from 'lucide-react';
 import { FitCallSource } from '../types';
 import { strategicFindings } from '../data/strategicFindings';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AntesDaReservaProps {
   onOpenFinding: (slug: string) => void;
@@ -9,47 +10,45 @@ interface AntesDaReservaProps {
 }
 
 export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDaReservaProps) {
+  const { c } = useLanguage();
+  const a = c.antesDaReserva;
+
   const [filter, setFilter] = useState<string>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const filteredInsights = filter === 'all' 
+  const filteredInsights = filter === 'all'
     ? strategicFindings
     : strategicFindings.filter(i => i.categoryId === filter);
 
   const simulateShare = (id: string, title: string) => {
     const textToCopy = `Pellissari Travel Design - Insight Estratégico:\n\n*${title}*\nConfira o planejamento estrutural antes de reservar sua viagem.\nAcesse: https://pelissari.travel/insights`;
-    
-    // Attempt standard navigator API
     if (navigator.clipboard) {
       navigator.clipboard.writeText(textToCopy);
     }
-    
     setCopiedId(id);
-    setTimeout(() => {
-      setCopiedId(null);
-    }, 2500);
+    setTimeout(() => setCopiedId(null), 2500);
   };
+
+  const filters = [
+    { id: 'all', label: a.filters.all },
+    { id: 'routes', label: a.filters.routes },
+    { id: 'pacing', label: a.filters.pacing },
+    { id: 'accommodations', label: a.filters.accommodations },
+    { id: 'experiences', label: a.filters.experiences },
+  ];
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-12">
       {/* Page Header */}
       <div className="mb-12 max-w-3xl space-y-3">
-        <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">Discovery & Intelligence</span>
-        <h1 className="font-manrope text-3xl md:text-5xl font-black text-primary tracking-tight">Antes da Reserva</h1>
-        <p className="text-sm text-cool-gray-600 leading-relaxed">
-          Nossa biblioteca de insights estruturais. Aqui nós desafiamos as premissas tradicionais do mercado de turismo de luxo local. Não compre pacotes baseados em impulsos visuais; compre a sequência correta.
-        </p>
+        <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">{a.eyebrow}</span>
+        <h1 className="font-manrope text-3xl md:text-5xl font-black text-primary tracking-tight">{a.title}</h1>
+        <p className="text-sm text-cool-gray-600 leading-relaxed">{a.description}</p>
       </div>
 
       {/* Filter Buttons */}
       <div className="flex flex-wrap gap-2 mb-10 border-b border-cool-gray-200 pb-4">
-        {[
-          { id: 'all', label: 'Todos os Insights' },
-          { id: 'routes', label: 'Estratégia de Rotas' },
-          { id: 'pacing', label: 'Ritmo & Cadência' },
-          { id: 'accommodations', label: 'Escolha de Acomodação' },
-          { id: 'experiences', label: 'Experiências' },
-        ].map(btn => (
+        {filters.map(btn => (
           <button
             key={btn.id}
             onClick={() => setFilter(btn.id)}
@@ -72,7 +71,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
             onClick={() => onOpenFinding(insight.slug)}
             className="bg-white border border-cool-gray-200 rounded-custom p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer focus-within:ring-1 focus-within:ring-primary"
           >
-            {/* Top Tag category */}
+            {/* Top accent */}
             <div className="absolute top-0 right-0 left-0 h-1 bg-cool-gray-100">
               <div className="h-full bg-primary/40 w-1/3"></div>
             </div>
@@ -82,9 +81,8 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                 <span className="text-[9px] uppercase font-bold tracking-wider text-cool-gray-400 bg-cool-gray-100 px-2.5 py-1 rounded-sm">
                   {insight.eyebrow}
                 </span>
-                
                 <span className="text-cool-gray-400 flex items-center gap-1 text-[11px]">
-                  <Clock size={11} /> 2 mins ler
+                  <Clock size={11} /> {a.card.readTime}
                 </span>
               </div>
 
@@ -94,12 +92,11 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
 
               <div className="h-px bg-cool-gray-100"></div>
 
-              {/* Error and Pelissari Read analysis */}
               <div className="space-y-3.5">
                 <div>
                   <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-cool-gray-500 flex items-center gap-1">
                     <AlertCircle size={10} className="text-cool-gray-400" />
-                    Erro Comum:
+                    {a.card.commonMistake}
                   </span>
                   <p className="text-xs text-cool-gray-500 italic mt-1 leading-relaxed">
                     {insight.sections.commonMistake}
@@ -108,7 +105,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
 
                 <div>
                   <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block">
-                    Pelissari Read:
+                    {a.card.pelissariRead}
                   </span>
                   <p className="text-xs text-cool-gray-700 font-medium mt-1 leading-relaxed text-balance">
                     {insight.sections.pelissariRead}
@@ -116,10 +113,9 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                 </div>
               </div>
 
-              {/* Resolution block with border/gray background */}
               <div className="bg-cool-gray-50 border border-cool-gray-200/70 p-4 rounded-custom text-xs">
                 <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-1">
-                  Decisão Pré-Reserva Recomendada:
+                  {a.card.decision}
                 </span>
                 <p className="text-cool-gray-600 leading-relaxed">{insight.sections.decisionBeforeBooking}</p>
               </div>
@@ -127,7 +123,6 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
 
             {/* Actions Footer */}
             <div className="pt-6 mt-6 border-t border-cool-gray-100 flex justify-between items-center bg-white">
-              {/* WhatsApp copy feedback simulation */}
               <button
                 onClick={(event) => {
                   event.stopPropagation();
@@ -140,7 +135,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                 }`}
               >
                 <Share2 size={12} />
-                {copiedId === insight.slug ? 'Copiado para WhatsApp' : 'Compartilhar'}
+                {copiedId === insight.slug ? a.card.copied : a.card.share}
               </button>
 
               <button
@@ -150,26 +145,24 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                 }}
                 className="text-xs font-bold text-primary hover:opacity-70 transition-all flex items-center gap-1"
               >
-                Ler achado <ArrowRight size={12} />
+                {a.card.read} <ArrowRight size={12} />
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Discovery Bottom Statement */}
+      {/* Bottom CTA */}
       <section className="mt-16 bg-cool-gray-50 border border-cool-gray-200 p-8 rounded-custom flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="space-y-2 text-center md:text-left">
-          <h3 className="font-manrope text-xl font-bold text-primary">Sente incerteza sobre o percurso da sua próxima viagem?</h3>
-          <p className="text-xs text-cool-gray-600 max-w-xl leading-relaxed">
-            Nós podemos calibrar estas variáveis para o seu caso de forma personalizada. Nossos designers operam com clareza objetiva, isolando você de conselhos amadores e arrependimentos financeiros pós-reserva.
-          </p>
+          <h3 className="font-manrope text-xl font-bold text-primary">{a.cta.title}</h3>
+          <p className="text-xs text-cool-gray-600 max-w-xl leading-relaxed">{a.cta.description}</p>
         </div>
         <button
           onClick={() => onOpenFitCall('antes_da_reserva')}
           className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-6 py-3.5 rounded-custom hover:bg-black transition-colors shrink-0"
         >
-          Agendar um Diagnóstico
+          {a.cta.button}
         </button>
       </section>
     </div>

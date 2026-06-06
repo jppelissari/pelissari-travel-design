@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { FitCallSource, Surface } from '../types';
+import { useLanguage, type Language } from '../context/LanguageContext';
 
 type PublicNavItem =
   | { id: Surface; label: string; type: 'surface' }
   | { id: string; label: string; type: 'section' };
-
-const publicNavItems: PublicNavItem[] = [
-  { id: 'home', label: 'Início', type: 'surface' },
-  { id: 'antes-da-reserva', label: 'Antes da Reserva', type: 'surface' },
-  { id: 'sample-blueprint', label: 'Sample Blueprint', type: 'surface' },
-  { id: 'servicos', label: 'Serviços', type: 'section' },
-  { id: 'faq', label: 'FAQ', type: 'section' },
-];
 
 interface TopAppBarProps {
   currentSurface: Surface;
@@ -22,9 +15,20 @@ interface TopAppBarProps {
 }
 
 export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSection, onOpenFitCall }: TopAppBarProps) {
+  const { lang, setLang, c } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isItemActive = (item: PublicNavItem) => currentSurface === item.id
-    || (currentSurface === 'strategic-finding' && item.id === 'antes-da-reserva');
+
+  const publicNavItems: PublicNavItem[] = [
+    { id: 'home', label: c.nav.inicio, type: 'surface' },
+    { id: 'antes-da-reserva', label: c.nav.antesDaReserva, type: 'surface' },
+    { id: 'sample-blueprint', label: c.nav.sampleBlueprint, type: 'surface' },
+    { id: 'servicos', label: c.nav.servicos, type: 'section' },
+    { id: 'faq', label: c.nav.faq, type: 'section' },
+  ];
+
+  const isItemActive = (item: PublicNavItem) =>
+    currentSurface === item.id ||
+    (currentSurface === 'strategic-finding' && item.id === 'antes-da-reserva');
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -35,7 +39,6 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
     const closeDrawerOnDesktop = (event: MediaQueryListEvent) => {
       if (event.matches) setIsMenuOpen(false);
     };
-
     desktopMedia.addEventListener('change', closeDrawerOnDesktop);
     return () => desktopMedia.removeEventListener('change', closeDrawerOnDesktop);
   }, []);
@@ -49,22 +52,36 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
     setIsMenuOpen(false);
   };
 
+  const handleLangToggle = (newLang: Language) => {
+    if (newLang === lang) return;
+    setLang(newLang);
+    const path = window.location.pathname;
+    const pathWithoutPrefix = path.replace(/^\/pt(?=\/|$)/, '') || '/';
+    const newPath =
+      newLang === 'pt'
+        ? pathWithoutPrefix === '/'
+          ? '/pt'
+          : `/pt${pathWithoutPrefix}`
+        : pathWithoutPrefix;
+    window.history.replaceState(window.history.state, '', newPath);
+  };
+
   return (
     <header className="w-full top-0 sticky z-50 bg-white border-b border-cool-gray-200">
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 flex justify-between items-center h-20">
-        
+
         {/* Left Side: Brand Logo and Mobile Action */}
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-primary hover:text-cool-gray-600 transition-colors duration-200 p-1"
-            aria-label="Abrir Menu"
+            aria-label={c.nav.openMenu}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          
-          <button 
-            onClick={() => handleNav(publicNavItems[0])} 
+
+          <button
+            onClick={() => handleNav(publicNavItems[0])}
             className="text-left select-none outline-none focus:outline-none"
           >
             <span className="font-manrope text-xl md:text-2xl font-black tracking-tighter text-primary">
@@ -85,8 +102,8 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
                 key={item.id}
                 onClick={() => handleNav(item)}
                 className={`transition-all duration-200 text-xs uppercase font-bold tracking-widest relative h-full flex items-center hover:text-primary ${
-                  isActive 
-                    ? 'text-primary border-b-2 border-primary' 
+                  isActive
+                    ? 'text-primary border-b-2 border-primary'
                     : 'text-cool-gray-500'
                 }`}
               >
@@ -96,13 +113,30 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
           })}
         </nav>
 
-        {/* Right Side: Primary Call To Action */}
-        <div className="flex items-center gap-3">
+        {/* Right Side: Language Toggle + CTA */}
+        <div className="flex items-center gap-4">
+          {/* EN · PT toggle */}
+          <div className="hidden md:flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest select-none">
+            <button
+              onClick={() => handleLangToggle('en')}
+              className={`transition-colors ${lang === 'en' ? 'text-primary' : 'text-cool-gray-400 hover:text-primary'}`}
+            >
+              EN
+            </button>
+            <span className="text-cool-gray-300">·</span>
+            <button
+              onClick={() => handleLangToggle('pt')}
+              className={`transition-colors ${lang === 'pt' ? 'text-primary' : 'text-cool-gray-400 hover:text-primary'}`}
+            >
+              PT
+            </button>
+          </div>
+
           <button
             onClick={() => onOpenFitCall('top_nav')}
             className="bg-primary text-white text-[10px] md:text-xs uppercase font-bold tracking-widest px-4 md:px-6 py-3 rounded-custom hover:bg-charcoal transition-all active:scale-[0.98]"
           >
-            Agendar Diagnóstico
+            {c.nav.cta}
           </button>
         </div>
       </div>
@@ -117,13 +151,30 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
                 onClick={() => handleNav(item)}
                 className={`w-full text-left px-3 py-2.5 rounded-custom text-sm font-semibold flex items-center justify-between ${
                   isItemActive(item)
-                    ? 'bg-cool-gray-100 text-primary font-bold' 
+                    ? 'bg-cool-gray-100 text-primary font-bold'
                     : 'text-cool-gray-600 hover:bg-cool-gray-50'
                 }`}
               >
                 {item.label}
               </button>
             ))}
+          </div>
+
+          {/* Mobile language toggle */}
+          <div className="flex items-center gap-2 px-3 text-[10px] uppercase font-bold tracking-widest">
+            <button
+              onClick={() => handleLangToggle('en')}
+              className={`transition-colors ${lang === 'en' ? 'text-primary' : 'text-cool-gray-400'}`}
+            >
+              EN
+            </button>
+            <span className="text-cool-gray-300">·</span>
+            <button
+              onClick={() => handleLangToggle('pt')}
+              className={`transition-colors ${lang === 'pt' ? 'text-primary' : 'text-cool-gray-400'}`}
+            >
+              PT
+            </button>
           </div>
 
           <div className="pt-2">
@@ -134,7 +185,7 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
               }}
               className="w-full bg-cool-gray-100 text-primary text-center py-3 rounded-custom text-xs uppercase font-bold tracking-widest block border border-cool-gray-200"
             >
-              Agendar Diagnóstico
+              {c.nav.cta}
             </button>
           </div>
         </div>

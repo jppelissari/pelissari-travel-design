@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, Check, ShieldAlert, X } from 'lucide-react';
 import { FitCallFormState, FitCallSource } from '../types';
 import { trackEvent } from '../lib/tracking';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FitCallModalProps {
   isOpen: boolean;
@@ -26,6 +27,9 @@ const initialForm: FitCallFormState = {
 };
 
 export default function FitCallModal({ isOpen, onClose, source }: FitCallModalProps) {
+  const { c } = useLanguage();
+  const m = c.modal;
+
   const [form, setForm] = useState<FitCallFormState>(initialForm);
 
   if (!isOpen) return null;
@@ -92,52 +96,103 @@ export default function FitCallModal({ isOpen, onClose, source }: FitCallModalPr
       <div className="w-full max-w-2xl bg-white border border-cool-gray-200 rounded-custom shadow-2xl overflow-hidden flex flex-col">
         <div className="flex justify-between items-center px-6 py-4 border-b border-cool-gray-100 bg-cool-gray-50">
           <div>
-            <span className="text-[10px] uppercase font-bold tracking-widest text-cool-gray-600 block">Avaliação de escopo</span>
-            <h3 className="font-manrope text-lg font-bold text-primary">Agendar Diagnóstico</h3>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-cool-gray-600 block">{m.eyebrow}</span>
+            <h3 className="font-manrope text-lg font-bold text-primary">{m.title}</h3>
           </div>
-          <button onClick={onClose} className="text-cool-gray-400 hover:text-primary transition-colors p-1" aria-label="Fechar diagnóstico"><X size={20} /></button>
+          <button onClick={onClose} className="text-cool-gray-400 hover:text-primary transition-colors p-1" aria-label={m.closeLabel}>
+            <X size={20} />
+          </button>
         </div>
 
         {form.status === 'success' ? (
           <div className="p-8 text-center flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center mb-4"><Check size={24} /></div>
-            <h4 className="font-manrope text-xl font-bold mb-2">Solicitação recebida.</h4>
-            <p className="text-sm text-cool-gray-600 mb-6 max-w-md">Recebemos seu diagnóstico inicial. Se houver fit, você receberá os próximos passos por email ou WhatsApp para agendar a conversa de escopo.</p>
-            <button onClick={handleReset} className="w-full max-w-sm bg-primary text-white uppercase text-xs tracking-wider py-3.5 rounded-custom font-semibold hover:bg-black transition-colors">Concluir</button>
+            <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center mb-4">
+              <Check size={24} />
+            </div>
+            <h4 className="font-manrope text-xl font-bold mb-2">{m.success.title}</h4>
+            <p className="text-sm text-cool-gray-600 mb-6 max-w-md">{m.success.description}</p>
+            <button
+              onClick={handleReset}
+              className="w-full max-w-sm bg-primary text-white uppercase text-xs tracking-wider py-3.5 rounded-custom font-semibold hover:bg-black transition-colors"
+            >
+              {m.success.button}
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-5 max-h-[82vh] overflow-y-auto">
             <div className="bg-cool-gray-50 rounded-custom border border-cool-gray-100 p-4 flex gap-3 items-start">
               <ShieldAlert className="text-primary shrink-0 mt-0.5" size={18} />
-              <p className="text-xs text-cool-gray-600 leading-relaxed">Nenhuma decisão, rota ou reserva é feita nesta etapa. O diagnóstico serve para avaliar escopo, complexidade e fit antes de qualquer recomendação específica.</p>
+              <p className="text-xs text-cool-gray-600 leading-relaxed">{m.info}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="space-y-1"><span className={labelClass}>Nome</span><input className={inputClass} required autoComplete="name" value={form.name} onChange={e => updateField('name', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>Email</span><input className={inputClass} required type="email" autoComplete="email" value={form.email} onChange={e => updateField('email', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>WhatsApp</span><input className={inputClass} required type="tel" autoComplete="tel" value={form.whatsapp} onChange={e => updateField('whatsapp', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>Destino ou região desejada</span><input className={inputClass} required placeholder="Ex: Japão, Itália..." value={form.destination} onChange={e => updateField('destination', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>Datas ou janela aproximada</span><input className={inputClass} required placeholder="Ex: outubro de 2026" value={form.dateWindow} onChange={e => updateField('dateWindow', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>Duração aproximada</span><input className={inputClass} required placeholder="Ex: 14 dias" value={form.duration} onChange={e => updateField('duration', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>Número de viajantes</span><input className={inputClass} required inputMode="numeric" placeholder="Ex: 2 adultos" value={form.travelers} onChange={e => updateField('travelers', e.target.value)} /></label>
-              <label className="space-y-1"><span className={labelClass}>Orçamento previsto em USD</span><input className={inputClass} required placeholder="Ex: US$20,000" value={form.budget} onChange={e => updateField('budget', e.target.value)} /></label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.name}</span>
+                <input className={inputClass} required autoComplete="name" value={form.name} onChange={e => updateField('name', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.email}</span>
+                <input className={inputClass} required type="email" autoComplete="email" value={form.email} onChange={e => updateField('email', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.whatsapp}</span>
+                <input className={inputClass} required type="tel" autoComplete="tel" value={form.whatsapp} onChange={e => updateField('whatsapp', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.destination}</span>
+                <input className={inputClass} required placeholder={m.form.destinationPlaceholder} value={form.destination} onChange={e => updateField('destination', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.dateWindow}</span>
+                <input className={inputClass} required placeholder={m.form.dateWindowPlaceholder} value={form.dateWindow} onChange={e => updateField('dateWindow', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.duration}</span>
+                <input className={inputClass} required placeholder={m.form.durationPlaceholder} value={form.duration} onChange={e => updateField('duration', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.travelers}</span>
+                <input className={inputClass} required inputMode="numeric" placeholder={m.form.travelersPlaceholder} value={form.travelers} onChange={e => updateField('travelers', e.target.value)} />
+              </label>
+              <label className="space-y-1">
+                <span className={labelClass}>{m.form.budget}</span>
+                <input className={inputClass} required placeholder={m.form.budgetPlaceholder} value={form.budget} onChange={e => updateField('budget', e.target.value)} />
+              </label>
             </div>
 
-            <label className="space-y-1 block"><span className={labelClass}>Ocasião especial <span className="normal-case font-normal">(opcional)</span></span><input className={inputClass} placeholder="Ex: lua de mel, aniversário..." value={form.occasion} onChange={e => updateField('occasion', e.target.value)} /></label>
-            <label className="space-y-1 block"><span className={labelClass}>O que já está reservado?</span><textarea className={`${inputClass} min-h-[72px]`} required placeholder="Informe reservas existentes ou escreva “Nada reservado”." value={form.alreadyBooked} onChange={e => updateField('alreadyBooked', e.target.value)} /></label>
-            <label className="space-y-1 block"><span className={labelClass}>Maior desconforto hoje</span><textarea className={`${inputClass} min-h-[88px]`} required placeholder="O que está dificultando as decisões da viagem?" value={form.biggestConcern} onChange={e => updateField('biggestConcern', e.target.value)} /></label>
+            <label className="space-y-1 block">
+              <span className={labelClass}>
+                {m.form.occasion} <span className="normal-case font-normal">{m.form.occasionOptional}</span>
+              </span>
+              <input className={inputClass} placeholder={m.form.occasionPlaceholder} value={form.occasion} onChange={e => updateField('occasion', e.target.value)} />
+            </label>
+            <label className="space-y-1 block">
+              <span className={labelClass}>{m.form.alreadyBooked}</span>
+              <textarea className={`${inputClass} min-h-[72px]`} required placeholder={m.form.alreadyBookedPlaceholder} value={form.alreadyBooked} onChange={e => updateField('alreadyBooked', e.target.value)} />
+            </label>
+            <label className="space-y-1 block">
+              <span className={labelClass}>{m.form.biggestConcern}</span>
+              <textarea className={`${inputClass} min-h-[88px]`} required placeholder={m.form.biggestConcernPlaceholder} value={form.biggestConcern} onChange={e => updateField('biggestConcern', e.target.value)} />
+            </label>
 
             <label className="flex items-start gap-3 text-xs text-cool-gray-600 leading-relaxed cursor-pointer">
               <input type="checkbox" required checked={form.consent} onChange={e => updateField('consent', e.target.checked)} className="mt-0.5 accent-primary" />
-              <span>Entendo que o diagnóstico é uma avaliação de escopo e não inclui recomendações específicas de rota, hotéis ou reservas.</span>
+              <span>{m.form.consent}</span>
             </label>
 
             {form.status === 'error' && (
-              <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-custom p-3">Não foi possível enviar sua solicitação agora. Tente novamente em alguns minutos ou escreva para <a className="underline font-semibold" href="mailto:contato@pelissari.travel">contato@pelissari.travel</a>.</p>
+              <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-custom p-3">
+                {m.form.errorPrefix}{' '}
+                <a className="underline font-semibold" href={`mailto:${m.form.errorEmail}`}>{m.form.errorEmail}</a>.
+              </p>
             )}
 
-            <button type="submit" disabled={form.status === 'submitting'} className="w-full bg-primary text-white text-xs uppercase font-bold tracking-widest py-4 rounded-custom flex items-center justify-center gap-2 hover:bg-black transition-colors disabled:opacity-50">
-              {form.status === 'submitting' ? 'Enviando...' : <>Solicitar Diagnóstico <ArrowRight size={14} /></>}
+            <button
+              type="submit"
+              disabled={form.status === 'submitting'}
+              className="w-full bg-primary text-white text-xs uppercase font-bold tracking-widest py-4 rounded-custom flex items-center justify-center gap-2 hover:bg-black transition-colors disabled:opacity-50"
+            >
+              {form.status === 'submitting' ? m.form.submitting : <>{m.form.submit} <ArrowRight size={14} /></>}
             </button>
           </form>
         )}
