@@ -1,4 +1,4 @@
-export type Surface = 'home' | 'antes-da-reserva' | 'sample-blueprint' | 'client-link' | 'shareable-preview';
+export type Surface = 'home' | 'antes-da-reserva' | 'strategic-finding' | 'sample-blueprint' | 'client-link' | 'shareable-preview';
 
 export type TrackedFitCallLocation =
   | 'top_nav'

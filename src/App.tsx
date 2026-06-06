@@ -12,9 +12,11 @@ import SampleBlueprint from './components/SampleBlueprint';
 import ClientTravelLink from './components/ClientTravelLink';
 import ShareablePreview from './components/ShareablePreview';
 import FitCallModal from './components/FitCallModal';
+import StrategicFindingDetail from './components/StrategicFindingDetail';
 import { FitCallSource, Surface, TrackedFitCallLocation } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { trackEvent } from './lib/tracking';
+import { getStrategicFinding } from './data/strategicFindings';
 
 const trackedFitCallLocations = new Set<TrackedFitCallLocation>([
   'top_nav',
@@ -28,7 +30,9 @@ const trackedFitCallLocations = new Set<TrackedFitCallLocation>([
 ]);
 
 export default function App() {
-  const [currentSurface, setCurrentSurface] = useState<Surface>('home');
+  const initialFinding = getStrategicFinding(window.location.pathname.replace(/^\/achados\//, '').replace(/\/$/, ''));
+  const [currentSurface, setCurrentSurface] = useState<Surface>(initialFinding ? 'strategic-finding' : 'home');
+  const [activeFindingSlug, setActiveFindingSlug] = useState<string | null>(initialFinding?.slug ?? null);
   const [isPrivateMode, setIsPrivateMode] = useState<boolean>(true);
   const [isFitCallOpen, setIsFitCallOpen] = useState<boolean>(false);
   const [fitCallSource, setFitCallSource] = useState<FitCallSource>('top_nav');
@@ -36,10 +40,56 @@ export default function App() {
   // Automatically scroll to top during navigation transitions
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-  }, [currentSurface]);
+  }, [currentSurface, activeFindingSlug]);
+
+  useEffect(() => {
+    window.history.replaceState(
+      { surface: currentSurface, findingSlug: activeFindingSlug },
+      '',
+      window.location.href,
+    );
+    // The initial history entry only needs to be labeled once for browser back/forward.
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const finding = getStrategicFinding(window.location.pathname.replace(/^\/achados\//, '').replace(/\/$/, ''));
+      const historySurface = event.state?.surface as Surface | undefined;
+
+      setActiveFindingSlug(finding?.slug ?? event.state?.findingSlug ?? null);
+      setCurrentSurface(finding ? 'strategic-finding' : historySurface ?? 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const onNavigate = (surface: Surface) => {
+    if (currentSurface === 'strategic-finding') {
+      window.history.pushState({ surface }, '', '/');
+    } else {
+      window.history.replaceState({ surface }, '', window.location.href);
+    }
+    setActiveFindingSlug(null);
     setCurrentSurface(surface);
+  };
+
+  const onOpenFinding = (slug: string) => {
+    const finding = getStrategicFinding(slug);
+    if (!finding) return;
+
+    window.history.replaceState(
+      { surface: currentSurface, findingSlug: activeFindingSlug },
+      '',
+      window.location.href,
+    );
+    window.history.pushState(
+      { surface: 'strategic-finding', findingSlug: finding.slug },
+      '',
+      `/achados/${finding.slug}`,
+    );
+    setActiveFindingSlug(finding.slug);
+    setCurrentSurface('strategic-finding');
   };
 
   const scrollToHomeSection = (sectionId: string, attempt = 0) => {
@@ -58,7 +108,7 @@ export default function App() {
   };
 
   const onNavigateHomeSection = (sectionId: string) => {
-    setCurrentSurface('home');
+    onNavigate('home');
     scrollToHomeSection(sectionId);
   };
 
@@ -83,10 +133,20 @@ export default function App() {
       case 'antes-da-reserva':
         return (
           <AntesDaReserva 
-            onNavigate={onNavigate} 
+            onOpenFinding={onOpenFinding}
             onOpenFitCall={onOpenFitCall} 
           />
         );
+      case 'strategic-finding': {
+        const finding = activeFindingSlug ? getStrategicFinding(activeFindingSlug) : undefined;
+        return finding ? (
+          <StrategicFindingDetail
+            finding={finding}
+            onBack={() => onNavigate('antes-da-reserva')}
+            onOpenFitCall={() => onOpenFitCall('antes_da_reserva')}
+          />
+        ) : null;
+      }
       case 'sample-blueprint':
         return (
           <SampleBlueprint 
@@ -132,7 +192,7 @@ export default function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentSurface}
+            key={activeFindingSlug ?? currentSurface}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}

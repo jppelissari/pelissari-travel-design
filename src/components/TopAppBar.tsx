@@ -23,6 +23,8 @@ interface TopAppBarProps {
 
 export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSection, onOpenFitCall }: TopAppBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isItemActive = (item: PublicNavItem) => currentSurface === item.id
+    || (currentSurface === 'strategic-finding' && item.id === 'antes-da-reserva');
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -77,7 +79,7 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
         {/* Center: Main Navigation (Desktop) */}
         <nav aria-label="Navegação pública" className="hidden md:flex gap-8 items-center h-full">
           {publicNavItems.map((item) => {
-            const isActive = currentSurface === item.id;
+            const isActive = isItemActive(item);
             return (
               <button
                 key={item.id}
@@ -114,7 +116,7 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
                 key={item.id}
                 onClick={() => handleNav(item)}
                 className={`w-full text-left px-3 py-2.5 rounded-custom text-sm font-semibold flex items-center justify-between ${
-                  currentSurface === item.id 
+                  isItemActive(item)
                     ? 'bg-cool-gray-100 text-primary font-bold' 
                     : 'text-cool-gray-600 hover:bg-cool-gray-50'
                 }`}
