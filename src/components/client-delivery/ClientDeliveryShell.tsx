@@ -38,7 +38,7 @@ export default function ClientDeliveryShell({
   };
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 md:px-8 py-8 md:py-14">
+    <div className="max-w-[1100px] mx-auto px-4 md:px-8 py-8 md:py-14">
 
       <DeliverySecurityBanner meta={template.meta} isPrivateMode={isPrivateMode} />
 

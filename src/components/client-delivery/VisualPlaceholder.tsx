@@ -29,6 +29,9 @@ export default function VisualPlaceholder({ type, height = 'md', className = '' 
       <span className="text-[10px] uppercase tracking-widest font-bold text-cool-gray-400 font-sans">
         {placeholderLabel[type]}
       </span>
+      <span className="text-[9px] text-cool-gray-300 font-sans text-center px-4 leading-snug">
+        Será substituído por visual real na versão final deste documento.
+      </span>
     </div>
   );
 }

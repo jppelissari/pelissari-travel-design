@@ -63,32 +63,44 @@ export default function PacingSection({ rows }: PacingSectionProps) {
               i % 2 === 0 ? 'bg-white' : 'bg-cool-gray-50/50'
             }`}
           >
-            {/* Label */}
+            {/* Label — always visible, acts as row identifier */}
             <div className="md:col-span-2 flex items-center gap-2">
               <span className="font-manrope text-xs font-bold text-primary">{row.label}</span>
             </div>
 
-            {/* Energy */}
+            {/* Energy — dot + label visible on mobile */}
             <div className="md:col-span-1 flex md:justify-center items-center gap-2">
               <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${energyDot[row.energyLevel]}`} />
-              <span className="text-[10px] text-cool-gray-500 md:hidden">{energyLabel[row.energyLevel]}</span>
+              <span className="text-[10px] text-cool-gray-500 md:hidden">
+                <span className="font-bold uppercase tracking-widest mr-1">Energia:</span>
+                {energyLabel[row.energyLevel]}
+              </span>
             </div>
 
-            {/* Anchor */}
+            {/* Anchor — mobile label above content */}
             <div className="md:col-span-4 md:pl-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-cool-gray-400 block mb-0.5 md:hidden">
+                Âncora
+              </span>
               <span className="text-xs text-cool-gray-700">{row.anchor}</span>
               {row.note && (
                 <p className="text-[10px] text-cool-gray-400 mt-0.5 italic leading-snug">{row.note}</p>
               )}
             </div>
 
-            {/* White space */}
+            {/* White space — mobile label above content */}
             <div className="md:col-span-3 md:pl-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-cool-gray-400 block mb-0.5 md:hidden">
+                Espaço Livre
+              </span>
               <span className="text-xs text-cool-gray-500">{row.whiteSpace}</span>
             </div>
 
-            {/* Decision load */}
-            <div className="md:col-span-2 flex md:justify-end items-start">
+            {/* Decision load — mobile label inline with badge */}
+            <div className="md:col-span-2 flex md:justify-end items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-cool-gray-400 md:hidden">
+                Decisão:
+              </span>
               <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded ${decisionBadge[row.decisionLoad]}`}>
                 {row.decisionLoad}
               </span>
