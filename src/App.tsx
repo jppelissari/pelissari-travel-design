@@ -156,10 +156,11 @@ export default function App() {
         );
       case 'client-link':
         return (
-          <ClientTravelLink 
-            onNavigate={onNavigate} 
+          <ClientTravelLink
+            onNavigate={onNavigate}
             isPrivateMode={isPrivateMode}
             setIsPrivateMode={setIsPrivateMode}
+            onOpenFitCall={() => onOpenFitCall('sample_blueprint_bottom')}
           />
         );
       case 'shareable-preview':
