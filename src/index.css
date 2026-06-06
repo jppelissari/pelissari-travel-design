@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-manrope: "Manrope", sans-serif;
+
+  --color-primary: #1a1a1b;
+  --color-brand-black: #1a1a1b;
+  --color-charcoal: #0e0e0f;
+  --color-warm-gray-50: #faf9f6;
+  --color-warm-gray-100: #f5f4f0;
+  --color-warm-gray-200: #ebeae4;
+  --color-warm-gray-300: #dbdad1;
+  --color-warm-gray-400: #b0af9f;
+  --color-warm-gray-500: #767568;
+  --color-cool-gray-50: #f8f9fa;
+  --color-cool-gray-100: #f1f3f5;
+  --color-cool-gray-200: #e9ecef;
+  --color-cool-gray-300: #dee2e6;
+  --color-cool-gray-400: #ced4da;
+  --color-cool-gray-500: #adb5bd;
+  --color-cool-gray-600: #6c757d;
+
+  --radius-custom: 0.3rem;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    color: #1a1a1b;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, .font-manrope {
+    font-family: var(--font-manrope);
+  }
+}
+
+/* Custom fade-in and smooth mask styles */
+.privacy-mask {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.privacy-masked {
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Strict rounded classes */
+.rounded-custom {
+  border-radius: 0.3rem !important;
+}
+
+/* Custom styling for status/timeline lines */
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1rem;
+  width: 1px;
+  background-color: #e9ecef;
+}
+
