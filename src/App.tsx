@@ -12,13 +12,26 @@ import SampleBlueprint from './components/SampleBlueprint';
 import ClientTravelLink from './components/ClientTravelLink';
 import ShareablePreview from './components/ShareablePreview';
 import FitCallModal from './components/FitCallModal';
-import { Surface } from './types';
+import { FitCallSource, Surface, TrackedFitCallLocation } from './types';
 import { motion, AnimatePresence } from 'motion/react';
+import { trackEvent } from './lib/tracking';
+
+const trackedFitCallLocations = new Set<TrackedFitCallLocation>([
+  'top_nav',
+  'home_hero',
+  'services_blueprint',
+  'services_full_design',
+  'services_signature',
+  'diagnostic_section',
+  'sample_blueprint_intro',
+  'sample_blueprint_proof_bridge',
+]);
 
 export default function App() {
   const [currentSurface, setCurrentSurface] = useState<Surface>('home');
   const [isPrivateMode, setIsPrivateMode] = useState<boolean>(true);
   const [isFitCallOpen, setIsFitCallOpen] = useState<boolean>(false);
+  const [fitCallSource, setFitCallSource] = useState<FitCallSource>('top_nav');
 
   // Automatically scroll to top during navigation transitions
   useEffect(() => {
@@ -49,7 +62,12 @@ export default function App() {
     scrollToHomeSection(sectionId);
   };
 
-  const onOpenFitCall = () => {
+  const onOpenFitCall = (source: FitCallSource) => {
+    if (trackedFitCallLocations.has(source as TrackedFitCallLocation)) {
+      trackEvent('cta_fit_call_opened', { location: source });
+    }
+
+    setFitCallSource(source);
     setIsFitCallOpen(true);
   };
 
@@ -136,6 +154,7 @@ export default function App() {
       <FitCallModal 
         isOpen={isFitCallOpen} 
         onClose={() => setIsFitCallOpen(false)} 
+        source={fitCallSource}
       />
     </div>
   );

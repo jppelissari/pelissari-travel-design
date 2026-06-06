@@ -11,10 +11,10 @@ import {
   Shield,
   Sparkles
 } from 'lucide-react';
-import { Surface } from '../types';
+import { FitCallSource, Surface } from '../types';
 
 interface ShareablePreviewProps {
-  onOpenFitCall: () => void;
+  onOpenFitCall: (source: FitCallSource) => void;
 }
 
 export default function ShareablePreview({ onOpenFitCall }: ShareablePreviewProps) {
@@ -188,7 +188,7 @@ export default function ShareablePreview({ onOpenFitCall }: ShareablePreviewProp
               Tratamos viagens internacionais importantes como projetos estruturais rígidos em termos de design e logística de fluxo.
             </p>
             <button
-              onClick={onOpenFitCall}
+              onClick={() => onOpenFitCall('shareable_preview')}
               className="w-full bg-white text-primary text-[11px] uppercase font-bold tracking-wider py-3 rounded-custom hover:bg-cool-gray-100 transition-colors"
             >
               Agendar Diagnóstico de Viagem

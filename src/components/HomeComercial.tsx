@@ -1,10 +1,11 @@
 import React from 'react';
 import { ArrowRight, Check, X } from 'lucide-react';
-import { Surface } from '../types';
+import { FitCallSource, Surface } from '../types';
+import { trackEvent } from '../lib/tracking';
 
 interface HomeComercialProps {
   onNavigate: (surface: Surface) => void;
-  onOpenFitCall: () => void;
+  onOpenFitCall: (source: FitCallSource) => void;
 }
 
 const insights = [
@@ -48,6 +49,7 @@ const services = [
     includes: ['Rota e sequência recomendada', 'Ritmo e distribuição de noites', 'Áreas de hospedagem por função da viagem', 'Prioridades, omissões e decisões críticas', 'Ordem recomendada de reserva'],
     excludes: ['Reservas, emissões ou suporte em viagem'],
     cta: 'Iniciar Blueprint',
+    fitCallLocation: 'services_blueprint' as const,
   },
   {
     title: 'Full Design',
@@ -56,6 +58,7 @@ const services = [
     includes: ['Tudo do Blueprint', 'Shortlist de hotéis com lógica de escolha', 'Recomendações de experiências e restaurantes', 'Suporte pré-viagem conforme escopo', 'Apoio de reserva quando contratado'],
     excludes: [],
     cta: 'Contratar Full Design',
+    fitCallLocation: 'services_full_design' as const,
   },
   {
     title: 'Signature',
@@ -64,6 +67,7 @@ const services = [
     includes: ['Design completo da viagem', 'Coordenação e contingência', 'Transições críticas e pontos frágeis mapeados', 'Suporte definido durante a viagem'],
     excludes: [],
     cta: 'Solicitar Proposta',
+    fitCallLocation: 'services_signature' as const,
   },
 ];
 
@@ -77,6 +81,16 @@ const faqs = [
 ];
 
 export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComercialProps) {
+  const openSampleBlueprint = (location: 'home_hero' | 'home_achados_card' | 'home_sample_section') => {
+    trackEvent('cta_sample_blueprint_opened', { location });
+    onNavigate('sample-blueprint');
+  };
+
+  const openAchados = () => {
+    trackEvent('cta_achados_opened', { location: 'home_achados_section' });
+    onNavigate('antes-da-reserva');
+  };
+
   return (
     <div className="w-full flex flex-col">
       <section className="py-16 md:py-24 text-center max-w-5xl mx-auto px-4">
@@ -84,8 +98,8 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
         <h1 className="font-manrope text-4xl sm:text-5xl md:text-6xl font-black text-primary tracking-tight mb-6 leading-[1.1]">Clareza na viagem, antes da reserva.</h1>
         <p className="text-sm md:text-base text-cool-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">Estruturamos viagens complexas antes de qualquer compromisso com voos, hotéis ou experiências — para que você entenda a rota, o ritmo, os riscos e a ordem certa de reserva antes de gastar errado.</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button onClick={onOpenFitCall} className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-black transition-colors">Agendar Diagnóstico de Escopo</button>
-          <button onClick={() => onNavigate('sample-blueprint')} className="bg-white border border-cool-gray-300 text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-50 transition-colors">Ver Sample Blueprint</button>
+          <button onClick={() => onOpenFitCall('home_hero')} className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-black transition-colors">Agendar Diagnóstico de Escopo</button>
+          <button onClick={() => openSampleBlueprint('home_hero')} className="bg-white border border-cool-gray-300 text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-50 transition-colors">Ver Sample Blueprint</button>
         </div>
       </section>
 
@@ -106,6 +120,9 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
             <span className="text-[10px] uppercase font-bold tracking-widest text-cool-gray-500 block">Visual Method</span>
             <h2 className="font-manrope text-2xl md:text-3xl font-black text-primary tracking-tight">ARQUITETURA DA VIAGEM</h2>
             <p className="text-xs md:text-sm text-cool-gray-600 max-w-xl mx-auto leading-relaxed">Delineamento de rota, ritmo, bases de hospedagem, transições, omissões intencionais e ordem de reserva.</p>
+            <button onClick={() => openSampleBlueprint('home_sample_section')} className="mt-4 text-[10px] uppercase tracking-widest font-bold text-primary inline-flex items-center gap-1 border-b border-primary pb-1">
+              Ver Sample Blueprint <ArrowRight size={12} />
+            </button>
           </div>
         </div>
       </section>
@@ -124,11 +141,11 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                   <div key={label}><span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-500 mb-1">{label}</span><p className="text-xs text-cool-gray-600 leading-relaxed">{text}</p></div>
                 ))}
               </div>
-              <button onClick={() => onNavigate('sample-blueprint')} className="text-left text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1">Ver como isso aparece no Blueprint <ArrowRight size={12} /></button>
+              <button onClick={() => openSampleBlueprint('home_achados_card')} className="text-left text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1">Ver como isso aparece no Blueprint <ArrowRight size={12} /></button>
             </article>
           ))}
         </div>
-        <button onClick={() => onNavigate('antes-da-reserva')} className="mt-8 border-b border-primary text-xs uppercase tracking-widest font-bold text-primary pb-1">Ver todos os achados estratégicos</button>
+        <button onClick={openAchados} className="mt-8 border-b border-primary text-xs uppercase tracking-widest font-bold text-primary pb-1">Ver todos os achados estratégicos</button>
       </section>
 
       <section id="servicos" className="scroll-mt-24 py-16 bg-cool-gray-50 border-y border-cool-gray-200">
@@ -148,7 +165,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                   <ul className="space-y-3">{service.includes.map(item => <li key={item} className="flex gap-2 text-xs text-cool-gray-700"><Check size={14} className="shrink-0" />{item}</li>)}</ul>
                   {service.excludes.length > 0 && <><span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-500 mt-6 mb-3">Não inclui</span><ul>{service.excludes.map(item => <li key={item} className="flex gap-2 text-xs text-cool-gray-500"><X size={14} className="shrink-0" />{item}</li>)}</ul></>}
                 </div>
-                <button onClick={onOpenFitCall} className="w-full mt-8 bg-primary text-white uppercase text-[10px] tracking-wider py-3 rounded-custom font-semibold hover:bg-black transition-colors">{service.cta}</button>
+                <button onClick={() => onOpenFitCall(service.fitCallLocation)} className="w-full mt-8 bg-primary text-white uppercase text-[10px] tracking-wider py-3 rounded-custom font-semibold hover:bg-black transition-colors">{service.cta}</button>
               </article>
             ))}
           </div>
@@ -160,7 +177,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
           <div className="max-w-3xl">
             <h2 className="font-manrope text-2xl md:text-4xl font-black tracking-tight">O diagnóstico define o escopo certo. Não entrega planejamento gratuito.</h2>
             <p className="text-sm text-cool-gray-300 leading-relaxed mt-5">Em 20 minutos, avaliamos destino, prazo, orçamento, viajantes, complexidade e nível de suporte necessário. Depois da conversa, você recebe uma recomendação objetiva: Blueprint, Full Design, Signature — ou a orientação de que este não é o momento certo para trabalharmos juntos.</p>
-            <button onClick={onOpenFitCall} className="mt-7 bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-100 transition-colors">Agendar Diagnóstico de Escopo</button>
+            <button onClick={() => onOpenFitCall('diagnostic_section')} className="mt-7 bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-100 transition-colors">Agendar Diagnóstico de Escopo</button>
           </div>
         </div>
       </section>

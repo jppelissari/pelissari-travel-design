@@ -16,12 +16,36 @@ import {
   XCircle,
   HelpCircle
 } from 'lucide-react';
-import { Surface } from '../types';
+import { FitCallSource, Surface } from '../types';
+import { trackEvent } from '../lib/tracking';
 
 interface SampleBlueprintProps {
   onNavigate: (surface: Surface) => void;
-  onOpenFitCall: () => void;
+  onOpenFitCall: (source: FitCallSource) => void;
 }
+
+const blueprintReadingCards = [
+  {
+    title: '1. Tese da rota',
+    text: 'Resume a lógica principal da viagem. Ela explica por que a sequência proposta existe e qual problema ela resolve.',
+  },
+  {
+    title: '2. Sequência e ritmo',
+    text: 'Mostra como as cidades, noites e deslocamentos foram organizados para reduzir fricção e preservar energia.',
+  },
+  {
+    title: '3. Decisões críticas',
+    text: 'Expõe escolhas que precisam ser feitas antes da reserva: o que priorizar, o que adiar e o que remover.',
+  },
+  {
+    title: '4. Omissões intencionais',
+    text: 'Um bom Blueprint não adiciona tudo. Ele também mostra o que foi deixado de fora para proteger a qualidade da viagem.',
+  },
+  {
+    title: '5. Ordem de reserva',
+    text: 'Indica o que deve ser confirmado primeiro para evitar travar a viagem na sequência errada.',
+  },
+];
 
 export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlueprintProps) {
   const destinationList = [
@@ -51,15 +75,87 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
     }
   ];
 
+  const openAchados = () => {
+    trackEvent('cta_achados_opened', { location: 'sample_blueprint_intro' });
+    onNavigate('antes-da-reserva');
+  };
+
   return (
     <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-12">
-      
-      {/* Top Breadcrumb & Title */}
+
+      {/* Cold visitor introduction */}
+      <section className="mb-16 border-b border-cool-gray-200 pb-16">
+        <div className="max-w-4xl space-y-5">
+          <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">VISUAL PROOF OF METHOD</span>
+          <h1 className="font-manrope text-3xl md:text-5xl font-black text-primary tracking-tight leading-[1.15]">
+            How a trip becomes a decision system.
+          </h1>
+          <p className="text-sm md:text-base text-cool-gray-600 max-w-3xl leading-relaxed">
+            This sample Blueprint shows how Pelissari Travel Design turns an open-ended trip idea into a structured travel decision: route sequence, pacing, hotel-area logic, trade-offs, omissions, and booking order.
+          </p>
+          <p className="text-sm md:text-base text-cool-gray-600 max-w-3xl leading-relaxed">
+            It is not a generic itinerary. It is a planning document built to help the traveler understand what to book, what to skip, what to delay, and where the trip can fail before money is committed.
+          </p>
+          <p className="text-xs text-cool-gray-500 max-w-3xl leading-relaxed italic">
+            Sample content is sanitized. Names, booking references, supplier details, and private client information are omitted.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            <button
+              onClick={() => onOpenFitCall('sample_blueprint_intro')}
+              className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-black transition-colors"
+            >
+              Agendar Diagnóstico de Escopo
+            </button>
+            <button
+              onClick={openAchados}
+              className="bg-white border border-cool-gray-300 text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-50 transition-colors"
+            >
+              Ver Achados Antes da Reserva
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Reading guide */}
+      <section className="mb-16">
+        <div className="max-w-3xl mb-8">
+          <h2 className="font-manrope text-2xl md:text-3xl font-black text-primary tracking-tight">Como ler este Blueprint</h2>
+          <p className="text-sm text-cool-gray-600 mt-3 leading-relaxed">
+            Leia este documento como uma sequência de decisões, não como uma lista de lugares. A pergunta não é apenas “onde ir?”, mas “em que ordem, com que ritmo, com quais omissões e com qual nível de suporte?”
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {blueprintReadingCards.map(card => (
+            <article key={card.title} className="bg-cool-gray-50 border border-cool-gray-200 rounded-custom p-5">
+              <h3 className="font-manrope text-sm font-bold text-primary">{card.title}</h3>
+              <p className="text-xs text-cool-gray-600 leading-relaxed mt-3">{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Proof bridge */}
+      <section className="mb-16 bg-primary text-white rounded-custom p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="max-w-3xl">
+          <h2 className="font-manrope text-2xl md:text-3xl font-black tracking-tight">O que este sample prova</h2>
+          <p className="text-sm text-cool-gray-300 mt-4 leading-relaxed">
+            O valor do Blueprint não está em listar recomendações. Está em tornar visível o raciocínio por trás da viagem: onde começar, onde desacelerar, onde concentrar esforço, onde não gastar energia e quais decisões precisam vir antes das reservas.
+          </p>
+        </div>
+        <button
+          onClick={() => onOpenFitCall('sample_blueprint_proof_bridge')}
+          className="bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-100 transition-colors shrink-0"
+        >
+          Criar meu Blueprint
+        </button>
+      </section>
+
+      {/* Detailed sample title */}
       <div className="mb-12 max-w-4xl space-y-4">
         <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">Visual Method Proof</span>
-        <h1 className="font-manrope text-3xl md:text-5xl font-black text-primary tracking-tight leading-[1.15]">
+        <h2 className="font-manrope text-3xl md:text-5xl font-black text-primary tracking-tight leading-[1.15]">
           Japan: The Pragmatic Approach to a High-Intensity First Trip
-        </h1>
+        </h2>
         <p className="text-sm md:text-base text-cool-gray-600 max-w-3xl leading-relaxed font-sans">
           Mapeamento logístico real resolvendo os maiores gargalos de fadiga térmica, fusão de fusos horários e sobreposição de experiências para viagens de 14 dias em solo japonês.
         </p>
@@ -282,7 +378,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
         </p>
         <div>
           <button
-            onClick={onOpenFitCall}
+            onClick={() => onOpenFitCall('sample_blueprint_bottom')}
             className="bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-50 transition-colors"
           >
             Fazer Meu Diagnóstico de Escopo

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check, ShieldAlert, X } from 'lucide-react';
-import { FitCallFormState } from '../types';
+import { FitCallFormState, FitCallSource } from '../types';
+import { trackEvent } from '../lib/tracking';
 
 interface FitCallModalProps {
   isOpen: boolean;
   onClose: () => void;
+  source: FitCallSource;
 }
 
 const initialForm: FitCallFormState = {
@@ -23,7 +25,7 @@ const initialForm: FitCallFormState = {
   status: 'idle',
 };
 
-export default function FitCallModal({ isOpen, onClose }: FitCallModalProps) {
+export default function FitCallModal({ isOpen, onClose, source }: FitCallModalProps) {
   const [form, setForm] = useState<FitCallFormState>(initialForm);
 
   if (!isOpen) return null;
@@ -34,6 +36,14 @@ export default function FitCallModal({ isOpen, onClose }: FitCallModalProps) {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const trackingParams = {
+      source,
+      destinationProvided: form.destination.trim().length > 0,
+      budgetProvided: form.budget.trim().length > 0,
+      alreadyBookedProvided: form.alreadyBooked.trim().length > 0,
+    };
+
+    trackEvent('fit_call_submit_attempt', trackingParams);
     setForm(previous => ({ ...previous, status: 'submitting' }));
 
     try {
@@ -61,8 +71,10 @@ export default function FitCallModal({ isOpen, onClose }: FitCallModalProps) {
       });
 
       if (!response.ok) throw new Error('Fit call request failed');
+      trackEvent('fit_call_submit_success', trackingParams);
       setForm(previous => ({ ...previous, status: 'success' }));
     } catch {
+      trackEvent('fit_call_submit_error', trackingParams);
       setForm(previous => ({ ...previous, status: 'error' }));
     }
   };

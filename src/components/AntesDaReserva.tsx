@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ArrowLeftRight, Check, Share2, ArrowRight, BookOpen, Clock, AlertCircle } from 'lucide-react';
-import { InsightCard, Surface } from '../types';
+import { FitCallSource, InsightCard, Surface } from '../types';
 
 interface AntesDaReservaProps {
   onNavigate: (surface: Surface) => void;
-  onOpenFitCall: () => void;
+  onOpenFitCall: (source: FitCallSource) => void;
 }
 
 export default function AntesDaReserva({ onNavigate, onOpenFitCall }: AntesDaReservaProps) {
@@ -205,7 +205,7 @@ export default function AntesDaReserva({ onNavigate, onOpenFitCall }: AntesDaRes
           </p>
         </div>
         <button
-          onClick={onOpenFitCall}
+          onClick={() => onOpenFitCall('antes_da_reserva')}
           className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-6 py-3.5 rounded-custom hover:bg-black transition-colors shrink-0"
         >
           Agendar um Diagnóstico

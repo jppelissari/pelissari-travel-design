@@ -101,7 +101,7 @@ export default function Footer({ onNavigate, currentSurface }: FooterProps) {
       {/* Extreme Bottom Bar */}
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 mt-12 pt-8 border-t border-cool-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-cool-gray-400 uppercase tracking-widest">
         <span>&copy; {new Date().getFullYear()} Pelissari Travel Design. Todos os direitos reservados.</span>
-        <span>Made in the US / Operated Globally with brazilian cultural alignment.</span>
+        <span>Made in the US / Operated Globally</span>
       </div>
     </footer>
   );

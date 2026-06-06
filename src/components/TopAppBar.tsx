@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Surface } from '../types';
+import { FitCallSource, Surface } from '../types';
 
 type PublicNavItem =
   | { id: Surface; label: string; type: 'surface' }
@@ -18,7 +18,7 @@ interface TopAppBarProps {
   currentSurface: Surface;
   onNavigate: (surface: Surface) => void;
   onNavigateHomeSection: (sectionId: string) => void;
-  onOpenFitCall: () => void;
+  onOpenFitCall: (source: FitCallSource) => void;
 }
 
 export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSection, onOpenFitCall }: TopAppBarProps) {
@@ -97,7 +97,7 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
         {/* Right Side: Primary Call To Action */}
         <div className="flex items-center gap-3">
           <button
-            onClick={onOpenFitCall}
+            onClick={() => onOpenFitCall('top_nav')}
             className="bg-primary text-white text-[10px] md:text-xs uppercase font-bold tracking-widest px-4 md:px-6 py-3 rounded-custom hover:bg-charcoal transition-all active:scale-[0.98]"
           >
             Agendar Diagnóstico
@@ -128,7 +128,7 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
             <button
               onClick={() => {
                 setIsMenuOpen(false);
-                onOpenFitCall();
+                onOpenFitCall('top_nav');
               }}
               className="w-full bg-cool-gray-100 text-primary text-center py-3 rounded-custom text-xs uppercase font-bold tracking-widest block border border-cool-gray-200"
             >
