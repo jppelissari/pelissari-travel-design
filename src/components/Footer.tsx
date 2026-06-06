@@ -1,6 +1,6 @@
 import React from 'react';
 import { Surface } from '../types';
-import { Compass, ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Lock } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (surface: Surface) => void;
@@ -64,23 +64,14 @@ export default function Footer({ onNavigate, currentSurface }: FooterProps) {
             </div>
           </div>
 
-          {/* Col 2: Acesso do Viajante */}
+          {/* Col 2: Área Exclusiva */}
           <div className="space-y-3">
-            <h4 className="text-[10px] uppercase font-bold tracking-widest text-primary">Clientes</h4>
-            <div className="flex flex-col gap-2 text-xs">
-              <button 
-                onClick={() => onNavigate('client-link')} 
-                className="text-left text-cool-gray-500 hover:text-primary transition-colors flex items-center gap-1"
-              >
-                Link do Cliente (Restrito)
-              </button>
-              <button 
-                onClick={() => onNavigate('shareable-preview')} 
-                className="text-left text-cool-gray-500 hover:text-primary transition-colors flex items-center gap-1"
-              >
-                Preview WhatsApp (Sanitizado)
-              </button>
-              <span className="text-cool-gray-400 select-none text-[10px]">Acesso via Token Privativo</span>
+            <h4 className="text-[10px] uppercase font-bold tracking-widest text-primary">Acesso</h4>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1.5 text-[10px] text-cool-gray-400 uppercase tracking-widest select-none">
+                <Lock size={10} className="shrink-0" />
+                <span>Área Exclusiva</span>
+              </div>
             </div>
           </div>
 
