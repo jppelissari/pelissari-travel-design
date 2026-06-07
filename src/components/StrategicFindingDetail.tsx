@@ -3,9 +3,9 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import {
   StrategicFinding,
   strategicFindingSectionKeys,
-  strategicFindingSectionLabels,
 } from '../data/strategicFindings';
 import { trackEvent } from '../lib/tracking';
+import { useLanguage } from '../context/LanguageContext';
 
 interface StrategicFindingDetailProps {
   finding: StrategicFinding;
@@ -18,6 +18,9 @@ export default function StrategicFindingDetail({
   onBack,
   onOpenFitCall,
 }: StrategicFindingDetailProps) {
+  const { c } = useLanguage();
+  const f = c.finding;
+
   useEffect(() => {
     trackEvent('finding_detail_opened', {
       slug: finding.slug,
@@ -41,7 +44,7 @@ export default function StrategicFindingDetail({
           className="inline-flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-cool-gray-600 hover:text-primary transition-colors mb-12"
         >
           <ArrowLeft size={13} />
-          Antes da Reserva
+          {f.backLabel}
         </button>
 
         <header className="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-14 pb-12 md:pb-16 border-b border-cool-gray-200">
@@ -73,14 +76,14 @@ export default function StrategicFindingDetail({
               </span>
               <div>
                 <h2 className="font-manrope text-lg md:text-xl font-bold text-primary">
-                  {strategicFindingSectionLabels[sectionKey]}
+                  {f.sectionLabels[sectionKey]}
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-cool-gray-600 leading-7">
                   {finding.sections[sectionKey]}
                 </p>
                 {sectionKey === 'blueprintAppearance' && finding.blueprintReference && (
                   <p className="mt-5 text-[10px] uppercase font-bold tracking-widest text-cool-gray-500">
-                    Referência: {finding.blueprintReference}
+                    {f.referenceLabel} {finding.blueprintReference}
                   </p>
                 )}
               </div>
@@ -90,10 +93,10 @@ export default function StrategicFindingDetail({
 
         <section className="mt-8 md:mt-14 pt-10 md:pt-14 border-t border-primary max-w-3xl ml-auto">
           <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">
-            Diagnóstico de escopo
+            {f.diagnosticEyebrow}
           </span>
           <h2 className="font-manrope text-2xl md:text-3xl font-bold text-primary mt-4 max-w-xl">
-            Antes de reservar, vale confirmar se a estrutura sustenta a viagem.
+            {f.diagnosticTitle}
           </h2>
           <button
             onClick={handleCta}

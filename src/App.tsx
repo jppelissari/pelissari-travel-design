@@ -17,6 +17,7 @@ import { FitCallSource, Surface, TrackedFitCallLocation } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { trackEvent } from './lib/tracking';
 import { getStrategicFinding } from './data/strategicFindings';
+import { useLanguage } from './context/LanguageContext';
 
 const trackedFitCallLocations = new Set<TrackedFitCallLocation>([
   'top_nav',
@@ -30,7 +31,10 @@ const trackedFitCallLocations = new Set<TrackedFitCallLocation>([
 ]);
 
 export default function App() {
-  const initialFinding = getStrategicFinding(window.location.pathname.replace(/^\/achados\//, '').replace(/\/$/, ''));
+  const { lang } = useLanguage();
+  const _rawPath = window.location.pathname;
+  const _normalizedPath = _rawPath.startsWith('/pt') ? _rawPath.slice(3) : _rawPath;
+  const initialFinding = getStrategicFinding(_normalizedPath.replace(/^\/achados\//, '').replace(/\/$/, ''));
   const [currentSurface, setCurrentSurface] = useState<Surface>(initialFinding ? 'strategic-finding' : 'home');
   const [activeFindingSlug, setActiveFindingSlug] = useState<string | null>(initialFinding?.slug ?? null);
   const [isPrivateMode, setIsPrivateMode] = useState<boolean>(true);
@@ -53,7 +57,9 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
-      const finding = getStrategicFinding(window.location.pathname.replace(/^\/achados\//, '').replace(/\/$/, ''));
+      const popPath = window.location.pathname;
+      const normalizedPopPath = popPath.startsWith('/pt') ? popPath.slice(3) : popPath;
+      const finding = getStrategicFinding(normalizedPopPath.replace(/^\/achados\//, '').replace(/\/$/, ''));
       const historySurface = event.state?.surface as Surface | undefined;
 
       setActiveFindingSlug(finding?.slug ?? event.state?.findingSlug ?? null);
@@ -78,6 +84,7 @@ export default function App() {
     const finding = getStrategicFinding(slug);
     if (!finding) return;
 
+    const langPrefix = lang === 'pt' ? '/pt' : '';
     window.history.replaceState(
       { surface: currentSurface, findingSlug: activeFindingSlug },
       '',
@@ -86,7 +93,7 @@ export default function App() {
     window.history.pushState(
       { surface: 'strategic-finding', findingSlug: finding.slug },
       '',
-      `/achados/${finding.slug}`,
+      `${langPrefix}/achados/${finding.slug}`,
     );
     setActiveFindingSlug(finding.slug);
     setCurrentSurface('strategic-finding');

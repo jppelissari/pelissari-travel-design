@@ -1,55 +1,63 @@
 import React, { useState } from 'react';
 import { Share2, ArrowRight, Clock, AlertCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 import { FitCallSource } from '../types';
 import { strategicFindings } from '../data/strategicFindings';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AntesDaReservaProps {
   onOpenFinding: (slug: string) => void;
   onOpenFitCall: (source: FitCallSource) => void;
 }
 
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' } as const,
+  transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+};
+
 export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDaReservaProps) {
+  const { c } = useLanguage();
+  const a = c.antesDaReserva;
+
   const [filter, setFilter] = useState<string>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const filteredInsights = filter === 'all' 
+  const filteredInsights = filter === 'all'
     ? strategicFindings
     : strategicFindings.filter(i => i.categoryId === filter);
 
   const simulateShare = (id: string, title: string) => {
     const textToCopy = `Pellissari Travel Design - Insight Estratégico:\n\n*${title}*\nConfira o planejamento estrutural antes de reservar sua viagem.\nAcesse: https://pelissari.travel/insights`;
-    
-    // Attempt standard navigator API
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(textToCopy);
-    }
-    
+    if (navigator.clipboard) navigator.clipboard.writeText(textToCopy);
     setCopiedId(id);
-    setTimeout(() => {
-      setCopiedId(null);
-    }, 2500);
+    setTimeout(() => setCopiedId(null), 2500);
   };
 
-  return (
-    <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-12">
-      {/* Page Header */}
-      <div className="mb-12 max-w-3xl space-y-3">
-        <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">Discovery & Intelligence</span>
-        <h1 className="font-manrope text-3xl md:text-5xl font-black text-primary tracking-tight">Antes da Reserva</h1>
-        <p className="text-sm text-cool-gray-600 leading-relaxed">
-          Nossa biblioteca de insights estruturais. Aqui nós desafiamos as premissas tradicionais do mercado de turismo de luxo local. Não compre pacotes baseados em impulsos visuais; compre a sequência correta.
-        </p>
-      </div>
+  const filters = [
+    { id: 'all', label: a.filters.all },
+    { id: 'routes', label: a.filters.routes },
+    { id: 'pacing', label: a.filters.pacing },
+    { id: 'accommodations', label: a.filters.accommodations },
+    { id: 'experiences', label: a.filters.experiences },
+  ];
 
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap gap-2 mb-10 border-b border-cool-gray-200 pb-4">
-        {[
-          { id: 'all', label: 'Todos os Insights' },
-          { id: 'routes', label: 'Estratégia de Rotas' },
-          { id: 'pacing', label: 'Ritmo & Cadência' },
-          { id: 'accommodations', label: 'Escolha de Acomodação' },
-          { id: 'experiences', label: 'Experiências' },
-        ].map(btn => (
+  const [featured, ...rest] = filteredInsights;
+
+  return (
+    <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-10 md:py-16">
+
+      {/* Page header */}
+      <motion.div {...fadeUp} className="mb-14 max-w-3xl space-y-3">
+        <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">{a.eyebrow}</span>
+        <h1 className="font-manrope text-4xl md:text-6xl font-black text-primary tracking-tight leading-[1.05]">{a.title}</h1>
+        <p className="text-sm text-cool-gray-600 leading-relaxed max-w-xl">{a.description}</p>
+      </motion.div>
+
+      {/* Filter bar */}
+      <motion.div {...fadeUp} className="flex flex-wrap gap-2 mb-12 border-b border-cool-gray-200 pb-5">
+        {filters.map(btn => (
           <button
             key={btn.id}
             onClick={() => setFilter(btn.id)}
@@ -62,116 +70,202 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
             {btn.label}
           </button>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Grid of Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredInsights.map(insight => (
-          <div
-            key={insight.slug}
-            onClick={() => onOpenFinding(insight.slug)}
-            className="bg-white border border-cool-gray-200 rounded-custom p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer focus-within:ring-1 focus-within:ring-primary"
-          >
-            {/* Top Tag category */}
-            <div className="absolute top-0 right-0 left-0 h-1 bg-cool-gray-100">
-              <div className="h-full bg-primary/40 w-1/3"></div>
-            </div>
+      {/* Editorial grid */}
+      {filteredInsights.length > 0 && (
+        <div className="space-y-6">
 
-            <div className="space-y-4 pt-1">
-              <div className="flex justify-between items-start gap-2">
-                <span className="text-[9px] uppercase font-bold tracking-wider text-cool-gray-400 bg-cool-gray-100 px-2.5 py-1 rounded-sm">
-                  {insight.eyebrow}
-                </span>
-                
-                <span className="text-cool-gray-400 flex items-center gap-1 text-[11px]">
-                  <Clock size={11} /> 2 mins ler
-                </span>
-              </div>
-
-              <h2 className="font-manrope text-lg font-bold text-primary leading-snug">
-                {insight.title}
-              </h2>
-
-              <div className="h-px bg-cool-gray-100"></div>
-
-              {/* Error and Pelissari Read analysis */}
-              <div className="space-y-3.5">
-                <div>
-                  <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-cool-gray-500 flex items-center gap-1">
-                    <AlertCircle size={10} className="text-cool-gray-400" />
-                    Erro Comum:
-                  </span>
-                  <p className="text-xs text-cool-gray-500 italic mt-1 leading-relaxed">
-                    {insight.sections.commonMistake}
-                  </p>
+          {/* Featured first card — full width, tall */}
+          {featured && (
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              whileHover={{ y: -2 }}
+              onClick={() => onOpenFinding(featured.slug)}
+              className="cursor-pointer bg-white border border-cool-gray-200 rounded-custom overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              {/* Accent line */}
+              <div className="h-0.5 bg-primary w-full" />
+              <div className="grid md:grid-cols-[1fr_1fr] gap-0 divide-y md:divide-y-0 md:divide-x divide-cool-gray-100">
+                {/* Left: title + mistake */}
+                <div className="p-8 md:p-10 space-y-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-[9px] uppercase font-bold tracking-wider text-cool-gray-400 bg-cool-gray-100 px-2.5 py-1 rounded-sm">
+                      {featured.eyebrow}
+                    </span>
+                    <span className="text-cool-gray-400 flex items-center gap-1 text-[11px]">
+                      <Clock size={11} /> {a.card.readTime}
+                    </span>
+                  </div>
+                  <h2 className="font-manrope text-2xl md:text-3xl font-black text-primary leading-tight">
+                    {featured.title}
+                  </h2>
+                  <div>
+                    <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-cool-gray-500 flex items-center gap-1 mb-2">
+                      <AlertCircle size={10} className="text-cool-gray-400" />
+                      {a.card.commonMistake}
+                    </span>
+                    <p className="text-sm text-cool-gray-500 italic leading-relaxed">
+                      {featured.sections.commonMistake}
+                    </p>
+                  </div>
                 </div>
-
-                <div>
-                  <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block">
-                    Pelissari Read:
-                  </span>
-                  <p className="text-xs text-cool-gray-700 font-medium mt-1 leading-relaxed text-balance">
-                    {insight.sections.pelissariRead}
-                  </p>
+                {/* Right: pelissari read + decision */}
+                <div className="p-8 md:p-10 space-y-5 bg-cool-gray-50">
+                  <div>
+                    <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-2">
+                      {a.card.pelissariRead}
+                    </span>
+                    <p className="text-sm text-cool-gray-700 font-medium leading-relaxed">
+                      {featured.sections.pelissariRead}
+                    </p>
+                  </div>
+                  <div className="bg-white border border-cool-gray-200 p-5 rounded-custom">
+                    <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-2">
+                      {a.card.decision}
+                    </span>
+                    <p className="text-sm text-cool-gray-600 leading-relaxed">
+                      {featured.sections.decisionBeforeBooking}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <button
+                      onClick={e => { e.stopPropagation(); simulateShare(featured.slug, featured.title); }}
+                      className={`text-[10px] uppercase font-bold tracking-widest px-3 py-2 rounded-custom transition-all flex items-center gap-1.5 ${
+                        copiedId === featured.slug
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-cool-gray-100 text-cool-gray-600 border border-cool-gray-200 hover:text-primary'
+                      }`}
+                    >
+                      <Share2 size={12} />
+                      {copiedId === featured.slug ? a.card.copied : a.card.share}
+                    </button>
+                    <button
+                      onClick={e => { e.stopPropagation(); onOpenFinding(featured.slug); }}
+                      className="text-xs font-bold text-primary hover:opacity-60 transition-opacity flex items-center gap-1"
+                    >
+                      {a.card.read} <ArrowRight size={12} />
+                    </button>
+                  </div>
                 </div>
               </div>
+            </motion.div>
+          )}
 
-              {/* Resolution block with border/gray background */}
-              <div className="bg-cool-gray-50 border border-cool-gray-200/70 p-4 rounded-custom text-xs">
-                <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-1">
-                  Decisão Pré-Reserva Recomendada:
-                </span>
-                <p className="text-cool-gray-600 leading-relaxed">{insight.sections.decisionBeforeBooking}</p>
-              </div>
+          {/* Remaining cards — asymmetric grid */}
+          {rest.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {rest.map((insight, i) => {
+                // Every 3rd card (index 2, 5, …) spans 2 cols for variety
+                const isWide = i === 2;
+                return (
+                  <motion.div
+                    key={insight.slug}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: (i % 3) * 0.08 }}
+                    whileHover={{ y: -2 }}
+                    onClick={() => onOpenFinding(insight.slug)}
+                    className={`bg-white border border-cool-gray-200 rounded-custom p-6 flex flex-col justify-between cursor-pointer hover:shadow-md transition-shadow relative overflow-hidden ${
+                      isWide ? 'md:col-span-2' : ''
+                    }`}
+                  >
+                    {/* Top accent */}
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-cool-gray-100">
+                      <div className="h-full bg-primary/50 w-1/3" />
+                    </div>
+
+                    <div className="space-y-4 pt-2">
+                      <div className="flex justify-between items-start gap-2">
+                        <span className="text-[9px] uppercase font-bold tracking-wider text-cool-gray-400 bg-cool-gray-100 px-2.5 py-1 rounded-sm">
+                          {insight.eyebrow}
+                        </span>
+                        <span className="text-cool-gray-400 flex items-center gap-1 text-[11px]">
+                          <Clock size={11} /> {a.card.readTime}
+                        </span>
+                      </div>
+
+                      <h2 className="font-manrope text-lg font-bold text-primary leading-snug">
+                        {insight.title}
+                      </h2>
+
+                      <div className="h-px bg-cool-gray-100" />
+
+                      <div className="space-y-3">
+                        <div>
+                          <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-cool-gray-500 flex items-center gap-1">
+                            <AlertCircle size={10} className="text-cool-gray-400" />
+                            {a.card.commonMistake}
+                          </span>
+                          <p className="text-xs text-cool-gray-500 italic mt-1 leading-relaxed">
+                            {insight.sections.commonMistake}
+                          </p>
+                        </div>
+                        <div>
+                          <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block">
+                            {a.card.pelissariRead}
+                          </span>
+                          <p className="text-xs text-cool-gray-700 font-medium mt-1 leading-relaxed">
+                            {insight.sections.pelissariRead}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-cool-gray-50 border border-cool-gray-200/70 p-4 rounded-custom text-xs">
+                        <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-1">
+                          {a.card.decision}
+                        </span>
+                        <p className="text-cool-gray-600 leading-relaxed">{insight.sections.decisionBeforeBooking}</p>
+                      </div>
+                    </div>
+
+                    <div className="pt-5 mt-5 border-t border-cool-gray-100 flex justify-between items-center">
+                      <button
+                        onClick={e => { e.stopPropagation(); simulateShare(insight.slug, insight.title); }}
+                        className={`text-[10px] uppercase font-bold tracking-widest px-3 py-2 rounded-custom transition-all flex items-center gap-1.5 ${
+                          copiedId === insight.slug
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-cool-gray-50 text-cool-gray-600 border border-cool-gray-200 hover:text-primary hover:bg-cool-gray-100'
+                        }`}
+                      >
+                        <Share2 size={12} />
+                        {copiedId === insight.slug ? a.card.copied : a.card.share}
+                      </button>
+                      <button
+                        onClick={e => { e.stopPropagation(); onOpenFinding(insight.slug); }}
+                        className="text-xs font-bold text-primary hover:opacity-60 transition-opacity flex items-center gap-1"
+                      >
+                        {a.card.read} <ArrowRight size={12} />
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
+          )}
+        </div>
+      )}
 
-            {/* Actions Footer */}
-            <div className="pt-6 mt-6 border-t border-cool-gray-100 flex justify-between items-center bg-white">
-              {/* WhatsApp copy feedback simulation */}
-              <button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  simulateShare(insight.slug, insight.title);
-                }}
-                className={`text-[10px] uppercase font-bold tracking-widest px-3 py-2 rounded-custom transition-all flex items-center gap-1.5 ${
-                  copiedId === insight.slug
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : 'bg-cool-gray-50 text-cool-gray-600 border border-cool-gray-200 hover:text-primary hover:bg-cool-gray-100'
-                }`}
-              >
-                <Share2 size={12} />
-                {copiedId === insight.slug ? 'Copiado para WhatsApp' : 'Compartilhar'}
-              </button>
-
-              <button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onOpenFinding(insight.slug);
-                }}
-                className="text-xs font-bold text-primary hover:opacity-70 transition-all flex items-center gap-1"
-              >
-                Ler achado <ArrowRight size={12} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Discovery Bottom Statement */}
-      <section className="mt-16 bg-cool-gray-50 border border-cool-gray-200 p-8 rounded-custom flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="space-y-2 text-center md:text-left">
-          <h3 className="font-manrope text-xl font-bold text-primary">Sente incerteza sobre o percurso da sua próxima viagem?</h3>
-          <p className="text-xs text-cool-gray-600 max-w-xl leading-relaxed">
-            Nós podemos calibrar estas variáveis para o seu caso de forma personalizada. Nossos designers operam com clareza objetiva, isolando você de conselhos amadores e arrependimentos financeiros pós-reserva.
-          </p>
+      {/* Bottom CTA */}
+      <motion.section
+        {...fadeUp}
+        className="mt-20 grid md:grid-cols-[1fr_auto] gap-8 items-center border-t border-cool-gray-200 pt-12"
+      >
+        <div className="space-y-2">
+          <h3 className="font-manrope text-xl font-bold text-primary">{a.cta.title}</h3>
+          <p className="text-sm text-cool-gray-600 max-w-xl leading-relaxed">{a.cta.description}</p>
         </div>
         <button
           onClick={() => onOpenFitCall('antes_da_reserva')}
-          className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-6 py-3.5 rounded-custom hover:bg-black transition-colors shrink-0"
+          className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-7 py-4 rounded-custom hover:bg-black transition-colors shrink-0"
         >
-          Agendar um Diagnóstico
+          {a.cta.button}
         </button>
-      </section>
+      </motion.section>
     </div>
   );
 }
