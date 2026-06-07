@@ -45,6 +45,11 @@ export interface FaqItem {
   a: string;
 }
 
+export interface PainPillar {
+  label: string;
+  detail: string;
+}
+
 export interface HomeContent {
   hero: {
     badge: string;
@@ -55,8 +60,8 @@ export interface HomeContent {
   };
   problem: {
     title: string;
-    p1: string;
-    p2: string;
+    pillars: PainPillar[];
+    connector: string;
   };
   method: {
     eyebrow: string;
@@ -265,6 +270,9 @@ export interface ModalContent {
     submitting: string;
     errorPrefix: string;
     errorEmail: string;
+    sectionAbout: string;
+    sectionTrip: string;
+    sectionContext: string;
   };
 }
 

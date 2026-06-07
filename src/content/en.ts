@@ -41,9 +41,15 @@ export const enContent: SiteContent = {
     },
 
     problem: {
-      title: 'O problema não é falta de opções. É falta de estrutura.',
-      p1: 'Você pode ter listas salvas, recomendações de amigos, vídeos, guias, mapas e um roteiro gerado por IA. Ainda assim, a decisão principal pode continuar em aberto: qual é a versão certa da viagem para o seu contexto?',
-      p2: 'A diferença entre uma viagem boa no papel e uma viagem boa no corpo está na sequência, no ritmo, nas transições, na escolha das bases e no que fica de fora.',
+      title: 'The problem isn\'t too few options. It\'s too little structure.',
+      pillars: [
+        { label: 'Sequence', detail: 'The order cities and bases must unfold before any flight is confirmed.' },
+        { label: 'Rhythm', detail: 'How to pace nights so energy is protected, not spent.' },
+        { label: 'Transitions', detail: 'What happens between bases: logistics, time, and hidden cost.' },
+        { label: 'Area', detail: 'Where to stay and its direct impact on the daily flow.' },
+        { label: 'Omissions', detail: 'What to remove to elevate the quality of what remains.' },
+      ],
+      connector: 'These five variables define the difference between a trip that works and one that disappoints.',
     },
 
     method: {
@@ -439,6 +445,9 @@ export const enContent: SiteContent = {
       submitting: 'Sending…',
       errorPrefix: 'We could not submit your request right now. Try again in a few minutes or write to',
       errorEmail: 'contato@pelissari.travel',
+      sectionAbout: 'About you',
+      sectionTrip: 'About the trip',
+      sectionContext: 'Context & decisions',
     },
   },
 };

@@ -40,8 +40,14 @@ export const ptContent: SiteContent = {
 
     problem: {
       title: 'O problema não é falta de opções. É falta de estrutura.',
-      p1: 'Você pode ter listas salvas, recomendações de amigos, vídeos, guias, mapas e um roteiro gerado por IA. Ainda assim, a decisão principal pode continuar em aberto: qual é a versão certa da viagem para o seu contexto?',
-      p2: 'A diferença entre uma viagem boa no papel e uma viagem boa no corpo está na sequência, no ritmo, nas transições, na escolha das bases e no que fica de fora.',
+      pillars: [
+        { label: 'Sequência', detail: 'A ordem das bases antes de qualquer voo confirmado.' },
+        { label: 'Ritmo', detail: 'Como distribuir noites sem desperdiçar energia.' },
+        { label: 'Transições', detail: 'O que acontece entre as bases: logística e custo oculto.' },
+        { label: 'Área', detail: 'Onde ficar e o impacto direto no cotidiano da viagem.' },
+        { label: 'Omissões', detail: 'O que retirar para elevar a qualidade do que fica.' },
+      ],
+      connector: 'Estas cinco variáveis definem a diferença entre uma viagem que funciona e uma que desaponta.',
     },
 
     method: {
@@ -437,6 +443,9 @@ export const ptContent: SiteContent = {
       submitting: 'Enviando...',
       errorPrefix: 'Não foi possível enviar sua solicitação agora. Tente novamente em alguns minutos ou escreva para',
       errorEmail: 'contato@pelissari.travel',
+      sectionAbout: 'Sobre você',
+      sectionTrip: 'Sobre a viagem',
+      sectionContext: 'Contexto e decisões',
     },
   },
 };
