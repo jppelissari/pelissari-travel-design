@@ -1,6 +1,6 @@
 import React from 'react';
 import { Surface } from '../types';
-import { ShieldCheck, Lock } from 'lucide-react';
+import { ShieldCheck, Unlock } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface FooterProps {
@@ -8,9 +8,20 @@ interface FooterProps {
   currentSurface: Surface;
 }
 
+const ACESSO_LABEL: Record<string, string> = {
+  en: 'Preview',
+  pt: 'Acesso',
+};
+
+const ACESSO_DESC: Record<string, string> = {
+  en: 'Client delivery portal',
+  pt: 'Portal de entrega ao cliente',
+};
+
 export default function Footer({ onNavigate, currentSurface }: FooterProps) {
-  const { c } = useLanguage();
+  const { lang, c } = useLanguage();
   const f = c.footer;
+  const isAcessoActive = currentSurface === 'client-link';
 
   return (
     <footer className="w-full py-12 md:py-16 bg-cool-gray-50 border-t border-cool-gray-200 mt-auto">
@@ -68,14 +79,24 @@ export default function Footer({ onNavigate, currentSurface }: FooterProps) {
             </div>
           </div>
 
-          {/* Col 2: Exclusive Access (no public links) */}
+          {/* Col 2: Exclusive Access */}
           <div className="space-y-3">
             <h4 className="text-[10px] uppercase font-bold tracking-widest text-primary">{f.accessTitle}</h4>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1.5 text-[10px] text-cool-gray-400 uppercase tracking-widest select-none">
-                <Lock size={10} className="shrink-0" />
-                <span>{f.accessLabel}</span>
-              </div>
+              <button
+                onClick={() => onNavigate('client-link')}
+                className={`group flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold transition-colors ${
+                  isAcessoActive
+                    ? 'text-primary'
+                    : 'text-cool-gray-500 hover:text-primary'
+                }`}
+              >
+                <Unlock size={10} className="shrink-0" />
+                <span>{ACESSO_LABEL[lang] ?? 'Acesso'}</span>
+              </button>
+              <p className="text-[10px] text-cool-gray-400 leading-relaxed">
+                {ACESSO_DESC[lang]}
+              </p>
             </div>
           </div>
 

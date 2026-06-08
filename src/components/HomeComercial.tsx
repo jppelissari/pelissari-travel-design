@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { FitCallSource, Surface } from '../types';
 import { trackEvent } from '../lib/tracking';
 import { useLanguage } from '../context/LanguageContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 interface HomeComercialProps {
   onNavigate: (surface: Surface) => void;
@@ -27,6 +28,7 @@ const fadeUp = {
 
 export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComercialProps) {
   const { c } = useLanguage();
+  const isMobile = useIsMobile();
   const h = c.home;
 
   const openSampleBlueprint = (location: 'home_hero' | 'home_achados_card' | 'home_sample_section') => {
@@ -82,26 +84,48 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
             </h2>
           </motion.div>
 
-          {/* Five pillars */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-cool-gray-200 border border-cool-gray-200 rounded-custom overflow-hidden">
-            {h.problem.pillars.map((pillar, i) => {
-              const Icon = PILLAR_ICONS[i];
-              return (
-                <motion.div
-                  key={pillar.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-white px-5 py-6 md:py-8 space-y-3 group"
-                >
-                  <Icon size={18} className="text-primary opacity-70" />
-                  <span className="block font-manrope text-sm font-bold text-primary">{pillar.label}</span>
-                  <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
-                </motion.div>
-              );
-            })}
-          </div>
+          {/* Five pillars — horizontal scroll on mobile, 5-col grid on desktop */}
+          {isMobile ? (
+            <div
+              className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4"
+              style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+            >
+              {h.problem.pillars.map((pillar, i) => {
+                const Icon = PILLAR_ICONS[i];
+                return (
+                  <div
+                    key={pillar.label}
+                    className="bg-white border border-cool-gray-200 rounded-custom px-5 py-6 space-y-3 shrink-0 w-52"
+                    style={{ scrollSnapAlign: 'start' }}
+                  >
+                    <Icon size={18} className="text-primary opacity-70" />
+                    <span className="block font-manrope text-sm font-bold text-primary">{pillar.label}</span>
+                    <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-cool-gray-200 border border-cool-gray-200 rounded-custom overflow-hidden">
+              {h.problem.pillars.map((pillar, i) => {
+                const Icon = PILLAR_ICONS[i];
+                return (
+                  <motion.div
+                    key={pillar.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                    className="bg-white px-5 py-6 md:py-8 space-y-3 group"
+                  >
+                    <Icon size={18} className="text-primary opacity-70" />
+                    <span className="block font-manrope text-sm font-bold text-primary">{pillar.label}</span>
+                    <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
 
           <motion.p
             {...fadeUp}
@@ -183,37 +207,69 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
           </div>
         </motion.article>
 
-        {/* 2×2 grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {rest.map((insight, i) => (
-            <motion.article
-              key={insight.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.08 }}
-              whileHover={{ y: -2 }}
-              onClick={() => openSampleBlueprint('home_achados_card')}
-              className="border border-cool-gray-200 rounded-custom p-6 flex flex-col gap-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
-            >
-              <h3 className="font-manrope text-base font-bold text-primary leading-snug">{insight.title}</h3>
-              <div className="space-y-3 flex-1">
-                {([
-                  [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
-                  [h.insights.cardLabels.decision, insight.decision, 'text-cool-gray-700 font-medium'],
-                ] as [string, string, string][]).map(([label, text, cls]) => (
-                  <div key={label}>
-                    <span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 mb-1">{label}</span>
-                    <p className={`text-xs leading-relaxed ${cls}`}>{text}</p>
-                  </div>
-                ))}
-              </div>
-              <span className="text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1 mt-auto">
-                {h.insights.cardLabels.cta} <ArrowRight size={11} />
-              </span>
-            </motion.article>
-          ))}
-        </div>
+        {/* Insight cards — horizontal carousel on mobile, 2×2 grid on desktop */}
+        {isMobile ? (
+          <div
+            className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4"
+            style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+          >
+            {rest.map((insight) => (
+              <article
+                key={insight.title}
+                onClick={() => openSampleBlueprint('home_achados_card')}
+                className="border border-cool-gray-200 rounded-custom p-5 flex flex-col gap-3 cursor-pointer bg-white shrink-0 w-72"
+                style={{ scrollSnapAlign: 'start' }}
+              >
+                <h3 className="font-manrope text-base font-bold text-primary leading-snug">{insight.title}</h3>
+                <div className="space-y-3 flex-1">
+                  {([
+                    [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
+                    [h.insights.cardLabels.decision, insight.decision, 'text-cool-gray-700 font-medium'],
+                  ] as [string, string, string][]).map(([label, text, cls]) => (
+                    <div key={label}>
+                      <span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 mb-1">{label}</span>
+                      <p className={`text-xs leading-relaxed ${cls}`}>{text}</p>
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1 mt-auto">
+                  {h.insights.cardLabels.cta} <ArrowRight size={11} />
+                </span>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {rest.map((insight, i) => (
+              <motion.article
+                key={insight.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: i * 0.08 }}
+                whileHover={{ y: -2 }}
+                onClick={() => openSampleBlueprint('home_achados_card')}
+                className="border border-cool-gray-200 rounded-custom p-6 flex flex-col gap-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
+              >
+                <h3 className="font-manrope text-base font-bold text-primary leading-snug">{insight.title}</h3>
+                <div className="space-y-3 flex-1">
+                  {([
+                    [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
+                    [h.insights.cardLabels.decision, insight.decision, 'text-cool-gray-700 font-medium'],
+                  ] as [string, string, string][]).map(([label, text, cls]) => (
+                    <div key={label}>
+                      <span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 mb-1">{label}</span>
+                      <p className={`text-xs leading-relaxed ${cls}`}>{text}</p>
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1 mt-auto">
+                  {h.insights.cardLabels.cta} <ArrowRight size={11} />
+                </span>
+              </motion.article>
+            ))}
+          </div>
+        )}
 
         <motion.div {...fadeUp} className="mt-10">
           <button
