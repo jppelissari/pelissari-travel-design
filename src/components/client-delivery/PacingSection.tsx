@@ -30,7 +30,7 @@ export default function PacingSection({ rows }: PacingSectionProps) {
       <div className="flex items-start gap-3 mb-8">
         <Footprints size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Visão de Ritmo</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Visão de Ritmo</h2>
           <p className="text-xs text-cool-gray-500 mt-1">Pacing por fase — energia, âncora, espaço, carga de decisão</p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function PacingSection({ rows }: PacingSectionProps) {
           >
             {/* Label — always visible, acts as row identifier */}
             <div className="md:col-span-2 flex items-center gap-2">
-              <span className="font-manrope text-xs font-bold text-primary">{row.label}</span>
+              <span className="font-sans text-xs font-bold text-primary">{row.label}</span>
             </div>
 
             {/* Energy — dot + label visible on mobile */}

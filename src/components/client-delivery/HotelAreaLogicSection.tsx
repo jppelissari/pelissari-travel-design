@@ -13,7 +13,7 @@ export default function HotelAreaLogicSection({ areas }: HotelAreaLogicSectionPr
       <div className="flex items-start gap-3 mb-2">
         <MapPin size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Lógica de Área de Hotel</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Lógica de Área de Hotel</h2>
           <p className="text-xs text-cool-gray-500 mt-1">Onde ficar — e por quê — não é uma grade de reservas</p>
         </div>
       </div>
@@ -28,7 +28,7 @@ export default function HotelAreaLogicSection({ areas }: HotelAreaLogicSectionPr
 
             <div className="md:col-span-8 space-y-4">
               <div className="border-l-2 border-primary pl-4">
-                <h3 className="font-manrope text-sm font-bold text-primary">{area.area}</h3>
+                <h3 className="font-sans text-sm font-bold text-primary">{area.area}</h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-4">

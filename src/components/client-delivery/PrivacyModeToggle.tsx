@@ -14,7 +14,7 @@ export default function PrivacyModeToggle({ isPrivateMode, onToggle }: PrivacyMo
           {isPrivateMode ? <EyeOff size={16} /> : <Eye size={16} />}
         </div>
         <div>
-          <h4 className="font-manrope text-sm font-bold text-primary">
+          <h4 className="font-sans text-sm font-bold text-primary">
             Modo Privativo {isPrivateMode ? 'Ativo' : 'Inativo'}
           </h4>
           <p className="text-xs text-cool-gray-500 max-w-sm mt-0.5 leading-relaxed">

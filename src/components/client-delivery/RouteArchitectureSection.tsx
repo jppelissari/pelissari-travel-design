@@ -13,7 +13,7 @@ export default function RouteArchitectureSection({ phases }: RouteArchitectureSe
       <div className="flex items-start gap-3 mb-8">
         <Compass size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Arquitetura da Rota</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Arquitetura da Rota</h2>
           <p className="text-xs text-cool-gray-500 mt-1">Sequência projetada com raciocínio por fase</p>
         </div>
       </div>
@@ -24,7 +24,7 @@ export default function RouteArchitectureSection({ phases }: RouteArchitectureSe
 
             {/* Phase number + connector */}
             <div className="md:col-span-1 flex md:flex-col items-center md:items-start gap-2 md:gap-0">
-              <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-manrope text-xs font-black shrink-0">
+              <div className="w-8 h-8 rounded-full bg-bone text-deep-petrol flex items-center justify-center font-sans text-xs font-black shrink-0">
                 {i + 1}
               </div>
               {i < phases.length - 1 && (
@@ -35,7 +35,7 @@ export default function RouteArchitectureSection({ phases }: RouteArchitectureSe
             {/* Phase content */}
             <div className="md:col-span-7 space-y-4">
               <div>
-                <h3 className="font-manrope text-lg font-bold text-primary">
+                <h3 className="font-sans text-lg font-bold text-primary">
                   {phase.destination}
                   <span className="ml-2 text-sm font-normal text-cool-gray-400">{phase.nights} noites</span>
                 </h3>

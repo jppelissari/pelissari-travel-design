@@ -1,11 +1,15 @@
 import React from 'react';
-import { Lock } from 'lucide-react';
 import { FitCallSource, Surface } from '../types';
 import { useLanguage, type Language } from '../context/LanguageContext';
 
-type PublicNavItem =
-  | { id: Surface; label: string; type: 'surface' }
-  | { id: string; label: string; type: 'section' };
+type NavItemType = 'surface' | 'section' | 'fitcall';
+
+interface NavItem {
+  id: string;
+  label: string;
+  type: NavItemType;
+  surface?: Surface;
+}
 
 interface TopAppBarProps {
   currentSurface: Surface;
@@ -14,34 +18,45 @@ interface TopAppBarProps {
   onOpenFitCall: (source: FitCallSource) => void;
 }
 
-const ACESSO_LABEL: Record<string, string> = {
-  en: 'Preview',
-  pt: 'Acesso',
+const CLIENT_LABEL: Record<string, string> = {
+  en: 'Client',
+  pt: 'Cliente',
 };
 
-export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSection, onOpenFitCall }: TopAppBarProps) {
+export default function TopAppBar({
+  currentSurface,
+  onNavigate,
+  onNavigateHomeSection,
+  onOpenFitCall,
+}: TopAppBarProps) {
   const { lang, setLang, c } = useLanguage();
 
-  const publicNavItems: PublicNavItem[] = [
-    { id: 'home', label: c.nav.inicio, type: 'surface' },
-    { id: 'antes-da-reserva', label: c.nav.antesDaReserva, type: 'surface' },
-    { id: 'sample-blueprint', label: c.nav.sampleBlueprint, type: 'surface' },
-    { id: 'servicos', label: c.nav.servicos, type: 'section' },
-    { id: 'faq', label: c.nav.faq, type: 'section' },
+  const primaryNav: NavItem[] = [
+    { id: 'method',           label: c.nav.inicio,          type: 'section'  },
+    { id: 'sample-blueprint', label: c.nav.sampleBlueprint, type: 'surface', surface: 'sample-blueprint' },
+    { id: 'servicos',         label: c.nav.servicos,        type: 'section'  },
+    { id: 'antes-da-reserva', label: c.nav.antesDaReserva,  type: 'surface', surface: 'antes-da-reserva' },
+    { id: 'fitcall',          label: c.nav.fitCall,         type: 'fitcall'  },
   ];
 
-  const acessoLabel = ACESSO_LABEL[lang] ?? 'Acesso';
-  const isAcessoActive = currentSurface === 'client-link';
+  const isActive = (item: NavItem): boolean => {
+    if (item.type === 'surface' && item.surface) {
+      return (
+        currentSurface === item.surface ||
+        (currentSurface === 'strategic-finding' && item.surface === 'antes-da-reserva')
+      );
+    }
+    if (item.id === 'method') return currentSurface === 'home';
+    return false;
+  };
 
-  const isItemActive = (item: PublicNavItem) =>
-    currentSurface === item.id ||
-    (currentSurface === 'strategic-finding' && item.id === 'antes-da-reserva');
-
-  const handleNav = (item: PublicNavItem) => {
-    if (item.type === 'section') {
+  const handleNav = (item: NavItem) => {
+    if (item.type === 'fitcall') {
+      onOpenFitCall('top_nav');
+    } else if (item.type === 'section') {
       onNavigateHomeSection(item.id);
-    } else {
-      onNavigate(item.id as Surface);
+    } else if (item.surface) {
+      onNavigate(item.surface);
     }
   };
 
@@ -49,115 +64,89 @@ export default function TopAppBar({ currentSurface, onNavigate, onNavigateHomeSe
     if (newLang === lang) return;
     setLang(newLang);
     const path = window.location.pathname;
-    const pathWithoutPrefix = path.replace(/^\/pt(?=\/|$)/, '') || '/';
-    const newPath =
+    const base = path.replace(/^\/pt(?=\/|$)/, '') || '/';
+    const next =
       newLang === 'pt'
-        ? pathWithoutPrefix === '/'
+        ? base === '/'
           ? '/pt'
-          : `/pt${pathWithoutPrefix}`
-        : pathWithoutPrefix;
-    window.history.replaceState(window.history.state, '', newPath);
+          : `/pt${base}`
+        : base;
+    window.history.replaceState(window.history.state, '', next);
   };
 
-  return (
-    <header className="w-full top-0 sticky z-50 bg-white border-b border-cool-gray-200">
-      <div className="max-w-[1280px] mx-auto px-4 lg:px-6 xl:px-8 flex justify-between items-center h-16 lg:h-20">
+  const clientLabel = CLIENT_LABEL[lang] ?? 'Client';
+  const isClientActive = currentSurface === 'client-link';
 
-        {/* Brand Logo */}
+  return (
+    <header className="site-header w-full top-0 sticky z-50">
+      <div className="max-w-[1280px] mx-auto px-5 lg:px-8 flex items-center justify-between h-[72px] lg:h-[80px]">
+
+        {/* ── Brand ─────────────────────────────────────────── */}
         <button
-          onClick={() => handleNav(publicNavItems[0])}
-          className="text-left select-none outline-none focus:outline-none"
+          onClick={() => onNavigate('home')}
+          className="site-brand text-left select-none outline-none focus-visible:ring-1 focus-visible:ring-stone/50 rounded-sm"
+          aria-label="ELUZA — Return to home"
         >
-          <span className="font-manrope text-xl lg:text-2xl font-black tracking-tighter text-primary">
-            PELISSARI
-          </span>
-          <span className="block text-[8px] tracking-[0.25em] font-medium text-cool-gray-500 uppercase -mt-1 leading-none font-sans">
-            Travel Design
-          </span>
+          <span className="site-brand-name">ELUZA</span>
+          <span className="site-brand-descriptor">Private Travel Design Studio</span>
         </button>
 
-        {/* Center: Main Navigation (Desktop only) */}
-        <nav aria-label="Navegação pública" className="hidden lg:flex items-center h-full">
-          {/* Primary nav items */}
-          <div className="flex gap-4 xl:gap-8 items-center h-full">
-            {publicNavItems.map((item) => {
-              const isActive = isItemActive(item);
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleNav(item)}
-                  className={`transition-all duration-200 text-xs uppercase font-bold tracking-widest relative h-full flex items-center hover:text-primary ${
-                    isActive
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-cool-gray-500'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Separator */}
-          <div className="w-px h-5 bg-cool-gray-200 mx-3 xl:mx-6 shrink-0" />
-
-          {/* Acesso — exclusive access link */}
-          <button
-            onClick={() => onNavigate('client-link')}
-            className={`transition-all duration-200 text-xs uppercase font-bold tracking-widest relative h-full flex items-center gap-1.5 hover:text-primary ${
-              isAcessoActive
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-cool-gray-500'
-            }`}
-          >
-            <Lock size={11} strokeWidth={isAcessoActive ? 2.5 : 2} />
-            {acessoLabel}
-          </button>
+        {/* ── Desktop primary nav ───────────────────────────── */}
+        <nav aria-label="Primary" className="hidden lg:flex items-center gap-6 xl:gap-8 h-full">
+          {primaryNav.map((item) => {
+            const active = isActive(item);
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNav(item)}
+                aria-current={active ? 'page' : undefined}
+                className={`site-nav-link${active ? ' site-nav-link-active' : ''}`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
 
-        {/* Right Side: Language Toggle + CTA (desktop) */}
-        <div className="flex items-center gap-4">
-          {/* EN · PT toggle — desktop only */}
-          <div className="hidden lg:flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest select-none">
-            <button
-              onClick={() => handleLangToggle('en')}
-              className={`transition-colors ${lang === 'en' ? 'text-primary' : 'text-cool-gray-400 hover:text-primary'}`}
-            >
-              EN
-            </button>
-            <span className="text-cool-gray-300">·</span>
-            <button
-              onClick={() => handleLangToggle('pt')}
-              className={`transition-colors ${lang === 'pt' ? 'text-primary' : 'text-cool-gray-400 hover:text-primary'}`}
-            >
-              PT
-            </button>
-          </div>
+        {/* ── Right cluster ─────────────────────────────────── */}
+        <div className="flex items-center gap-3 lg:gap-4">
 
-          {/* CTA button — desktop only (mobile uses FAB) */}
+          {/* CTA — desktop only */}
           <button
             onClick={() => onOpenFitCall('top_nav')}
-            className="hidden lg:block bg-primary text-white text-xs uppercase font-bold tracking-widest px-4 xl:px-6 py-3 rounded-custom hover:bg-charcoal transition-all active:scale-[0.98]"
+            className="hidden lg:block site-header-cta"
           >
             {c.nav.cta}
           </button>
 
-          {/* Mobile: compact lang toggle */}
-          <div className="lg:hidden flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest select-none">
+          {/* Language toggle — always visible */}
+          <div className="language-switcher">
             <button
               onClick={() => handleLangToggle('en')}
-              className={`transition-colors ${lang === 'en' ? 'text-primary' : 'text-cool-gray-400'}`}
+              className={`transition-colors ${lang === 'en' ? 'text-bone' : 'text-stone hover:text-bone'}`}
             >
               EN
             </button>
-            <span className="text-cool-gray-300">·</span>
+            <span className="text-stone/35 mx-1.5 select-none">·</span>
             <button
               onClick={() => handleLangToggle('pt')}
-              className={`transition-colors ${lang === 'pt' ? 'text-primary' : 'text-cool-gray-400'}`}
+              className={`transition-colors ${lang === 'pt' ? 'text-bone' : 'text-stone hover:text-bone'}`}
             >
               PT
             </button>
           </div>
+
+          {/* Client access — desktop only, discreet */}
+          <button
+            onClick={() => onNavigate('client-link')}
+            aria-current={isClientActive ? 'page' : undefined}
+            className={`hidden lg:block text-[10px] uppercase font-medium tracking-[0.10em] transition-colors ${
+              isClientActive ? 'text-bone' : 'text-stone/50 hover:text-stone'
+            }`}
+          >
+            {clientLabel}
+          </button>
+
         </div>
       </div>
     </header>

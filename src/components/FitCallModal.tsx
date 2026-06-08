@@ -74,20 +74,20 @@ export default function FitCallModal({ isOpen, onClose, source }: FitCallModalPr
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-deep-petrol/90 backdrop-blur-sm"
         >
           <motion.div
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.99 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-xl bg-white rounded-custom shadow-2xl overflow-hidden flex flex-col"
+            className="fit-call-modal w-full max-w-xl bg-white rounded-custom shadow-2xl overflow-hidden flex flex-col"
           >
             {/* Header */}
-            <div className="flex justify-between items-center px-7 py-5 border-b border-cool-gray-100">
+            <div className="fit-call-modal-header flex justify-between items-start px-7 py-5 border-b border-cool-gray-100">
               <div>
                 <span className="text-[9px] uppercase font-bold tracking-widest text-cool-gray-400 block mb-0.5">{m.eyebrow}</span>
-                <h3 className="font-manrope text-lg font-bold text-primary">{m.title}</h3>
+                <h3 className="font-sans text-lg font-semibold text-primary">{m.title}</h3>
               </div>
               <button onClick={onClose} className="text-cool-gray-300 hover:text-primary transition-colors p-1" aria-label={m.closeLabel}>
                 <X size={18} />
@@ -96,17 +96,17 @@ export default function FitCallModal({ isOpen, onClose, source }: FitCallModalPr
 
             {form.status === 'success' ? (
               <div className="p-10 text-center flex flex-col items-center">
-                <div className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center mb-5">
+                <div className="w-11 h-11 rounded-full bg-bone text-deep-petrol flex items-center justify-center mb-5">
                   <Check size={20} />
                 </div>
-                <h4 className="font-manrope text-xl font-bold mb-2">{m.success.title}</h4>
+                <h4 className="font-sans text-xl font-semibold mb-2">{m.success.title}</h4>
                 <p className="text-sm text-cool-gray-500 mb-8 max-w-sm leading-relaxed">{m.success.description}</p>
-                <button onClick={handleReset} className="bg-primary text-white uppercase text-xs tracking-wider px-8 py-3.5 rounded-custom font-semibold hover:bg-black transition-colors">
+                <button onClick={handleReset} className="bg-bone text-deep-petrol uppercase text-xs tracking-wider px-8 py-3.5 rounded-custom font-semibold hover:bg-stone transition-colors">
                   {m.success.button}
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="px-7 py-6 space-y-8 max-h-[80vh] overflow-y-auto">
+              <form onSubmit={handleSubmit} className="fit-call-modal-body px-7 py-6 space-y-10 max-h-[76vh] overflow-y-auto">
 
                 {/* Info notice */}
                 <div className="flex gap-3 items-start text-xs text-cool-gray-500 leading-relaxed">
@@ -200,7 +200,7 @@ export default function FitCallModal({ isOpen, onClose, source }: FitCallModalPr
                 </label>
 
                 {form.status === 'error' && (
-                  <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-custom p-3">
+                  <p className="text-xs text-stone bg-paper border border-stone/50 rounded-custom p-3">
                     {m.form.errorPrefix}{' '}
                     <a className="underline font-semibold" href={`mailto:${m.form.errorEmail}`}>{m.form.errorEmail}</a>.
                   </p>
@@ -209,7 +209,7 @@ export default function FitCallModal({ isOpen, onClose, source }: FitCallModalPr
                 <button
                   type="submit"
                   disabled={form.status === 'submitting'}
-                  className="w-full bg-primary text-white text-xs uppercase font-bold tracking-widest py-4 rounded-custom flex items-center justify-center gap-2 hover:bg-black transition-colors disabled:opacity-40"
+                  className="w-full bg-bone text-deep-petrol text-xs uppercase font-bold tracking-widest py-4 rounded-custom flex items-center justify-center gap-2 hover:bg-stone transition-colors disabled:opacity-40"
                 >
                   {form.status === 'submitting' ? m.form.submitting : <>{m.form.submit} <ArrowRight size={14} /></>}
                 </button>

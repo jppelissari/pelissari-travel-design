@@ -25,7 +25,7 @@ export default function TransitionDesignSection({ transitions }: TransitionDesig
       <div className="flex items-start gap-3 mb-2">
         <ArrowRight size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Design de Transições</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Design de Transições</h2>
           <p className="text-xs text-cool-gray-500 mt-1">Chegadas, transfers e primeiros 90 minutos em cada base</p>
         </div>
       </div>
@@ -42,7 +42,7 @@ export default function TransitionDesignSection({ transitions }: TransitionDesig
                 <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded ${typeBadge[transition.type]}`}>
                   {typeLabel[transition.type]}
                 </span>
-                <h3 className="font-manrope text-sm font-bold text-primary">{transition.label}</h3>
+                <h3 className="font-sans text-sm font-bold text-primary">{transition.label}</h3>
               </div>
 
               <p className="text-xs text-cool-gray-600 leading-relaxed">{transition.description}</p>

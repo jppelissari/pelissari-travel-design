@@ -4,8 +4,8 @@ import './index.css';
 import App from './App';
 import { LanguageProvider } from './context/LanguageContext';
 
-// Register service worker for PWA support
-if ('serviceWorker' in navigator) {
+// Keep development source modules out of the production PWA cache.
+if (!import.meta.env.DEV && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')

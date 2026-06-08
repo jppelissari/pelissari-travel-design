@@ -34,7 +34,7 @@ export default function NextStepsSection({ steps, onOpenFitCall }: NextStepsSect
   return (
     <section className="mb-14">
       <div className="mb-8">
-        <h2 className="font-manrope text-xl font-black text-primary">Próximos Passos</h2>
+        <h2 className="font-sans text-xl font-black text-primary">Próximos Passos</h2>
         <p className="text-xs text-cool-gray-500 mt-1">O que fazer com este documento agora</p>
       </div>
 
@@ -50,12 +50,12 @@ export default function NextStepsSection({ steps, onOpenFitCall }: NextStepsSect
               }`}
             >
               <div className="flex items-center gap-3 shrink-0">
-                <span className="font-manrope text-xs font-black text-cool-gray-300 w-4 text-right">{i + 1}</span>
+                <span className="font-sans text-xs font-black text-cool-gray-300 w-4 text-right">{i + 1}</span>
                 {config.icon}
               </div>
 
               <div className="flex-1 min-w-0">
-                <h4 className="font-manrope text-sm font-bold text-primary mb-1">{step.action}</h4>
+                <h4 className="font-sans text-sm font-bold text-primary mb-1">{step.action}</h4>
                 <p className="text-xs text-cool-gray-600 leading-relaxed">{step.detail}</p>
 
                 {step.cta && (

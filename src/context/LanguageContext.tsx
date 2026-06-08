@@ -15,7 +15,10 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function detectInitialLang(): Language {
   if (window.location.pathname.startsWith('/pt')) return 'pt';
-  const stored = localStorage.getItem('pelissari-lang') as Language | null;
+  const stored = (
+    localStorage.getItem('eluza-lang') ??
+    localStorage.getItem('pelissari-lang')
+  ) as Language | null;
   return stored ?? 'en';
 }
 
@@ -24,7 +27,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const setLang = (newLang: Language) => {
     setLangState(newLang);
-    localStorage.setItem('pelissari-lang', newLang);
+    localStorage.setItem('eluza-lang', newLang);
   };
 
   const c = useMemo(() => (lang === 'pt' ? ptContent : enContent), [lang]);

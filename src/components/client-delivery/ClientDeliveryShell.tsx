@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { ClientDeliveryTemplate } from '../../data/clientDeliveryTemplate';
 import { Surface } from '../../types';
 
@@ -33,12 +33,19 @@ export default function ClientDeliveryShell({
   onNavigate,
   onOpenFitCall,
 }: ClientDeliveryShellProps) {
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
   const handleGeneratePreview = () => {
     onNavigate('shareable-preview');
   };
 
   return (
-    <div className="max-w-[1100px] mx-auto px-4 md:px-8 py-8 md:py-14">
+    <div
+      className="max-w-[1100px] mx-auto px-4 md:px-8 py-8 md:py-14"
+      style={{ overflowAnchor: 'none' }}
+    >
 
       <DeliverySecurityBanner meta={template.meta} isPrivateMode={isPrivateMode} />
 

@@ -1,9 +1,9 @@
 /**
- * PELISSARI Travel Design — Service Worker
+ * ELUZA — Service Worker
  * Strategy: Network-first for navigation, cache-first for static assets.
  */
 
-const CACHE_NAME = 'pelissari-v2';
+const CACHE_NAME = 'eluza-v3';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [

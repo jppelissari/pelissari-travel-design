@@ -3,39 +3,40 @@ import type { SiteContent } from './types';
 export const ptContent: SiteContent = {
   nav: {
     openMenu: 'Abrir Menu',
-    inicio: 'Início',
+    inicio: 'Método',
     antesDaReserva: 'Antes da Reserva',
-    sampleBlueprint: 'Sample Blueprint',
+    sampleBlueprint: 'Blueprint',
     servicos: 'Serviços',
     faq: 'FAQ',
-    cta: 'Agendar Diagnóstico',
+    fitCall: 'Fit Call',
+    client: 'Cliente',
+    cta: 'Solicitar Diagnóstico',
   },
 
   footer: {
-    tagline: 'Design first. Booking second. Perks third.',
-    taglineMantra:
-      'Mantra para estruturação de itinerários complexos com precisão arquitetônica, garantindo que o design da viagem dite a execução.',
-    safePayments: 'Infraestrutura Segura de Pagamentos',
+    tagline: 'Clareza de viagem, antes do compromisso.',
+    taglineMantra: 'Lógica de rota antes das reservas.',
+    safePayments: 'Planejamento Antes do Compromisso',
     navTitle: 'Navegação',
     navHome: 'Início Comercial',
     navAntesDaReserva: 'Antes da Reserva',
-    navSampleBlueprint: 'Sample Blueprint',
+    navSampleBlueprint: 'Blueprint de Exemplo',
     accessTitle: 'Acesso',
     accessLabel: 'Área Exclusiva',
     legalTitle: 'Legal',
     terms: 'Termos de Serviço',
     privacy: 'Política de Privacidade',
-    madeIn: 'Made in the US / Operated Globally',
+    madeIn: 'Criado nos EUA / Operação global',
   },
 
   home: {
     hero: {
-      badge: 'Design first. Booking second.',
-      title: 'Clareza na viagem, antes da reserva.',
+      badge: 'Private Travel Design Studio',
+      title: 'Clareza de viagem, antes do compromisso.',
       description:
         'Estruturamos viagens complexas antes de qualquer compromisso com voos, hotéis ou experiências — para que você entenda a rota, o ritmo, os riscos e a ordem certa de reserva antes de gastar errado.',
-      ctaMain: 'Agendar Diagnóstico de Escopo',
-      ctaSecondary: 'Ver Sample Blueprint',
+      ctaMain: 'Solicitar Diagnóstico',
+      ctaSecondary: 'Ver Blueprint de Exemplo',
     },
 
     problem: {
@@ -51,11 +52,11 @@ export const ptContent: SiteContent = {
     },
 
     method: {
-      eyebrow: 'Visual Method',
+      eyebrow: 'Método Visual',
       title: 'ARQUITETURA DA VIAGEM',
       description:
         'Delineamento de rota, ritmo, bases de hospedagem, transições, omissões intencionais e ordem de reserva.',
-      cta: 'Ver Sample Blueprint',
+      cta: 'Ver Blueprint de Exemplo',
     },
 
     insights: {
@@ -64,7 +65,7 @@ export const ptContent: SiteContent = {
         'Pequenas decisões tomadas cedo mudam a viagem inteira. Estes são exemplos do tipo de leitura que fazemos antes de qualquer hotel, voo ou experiência ser confirmado.',
       cardLabels: {
         error: 'Erro comum',
-        read: 'Leitura Pelissari',
+        read: 'Leitura ELUZA',
         decision: 'Decisão recomendada',
         cta: 'Ver como isso aparece no Blueprint',
       },
@@ -77,7 +78,7 @@ export const ptContent: SiteContent = {
           decision: 'Começar por uma base mais silenciosa e deixar Tóquio para quando o viajante já estiver adaptado.',
         },
         {
-          title: 'O custo oculto do overplanning de luxo',
+          title: 'O custo oculto do overplanning',
           error: 'Transformar cada refeição, transfer e experiência em compromisso.',
           read: 'Excesso de confirmação parece segurança, mas pode eliminar presença, espontaneidade e recuperação física.',
           decision: 'Separar âncoras reais de espaços intencionalmente livres.',
@@ -126,7 +127,7 @@ export const ptContent: SiteContent = {
         },
         {
           title: 'Full Design',
-          price: 'From US$1,500',
+          price: 'A partir de US$1.500',
           description: 'Para quem quer o plano desenhado e apoio para transformar a direção em reservas.',
           includes: [
             'Tudo do Blueprint',
@@ -140,7 +141,7 @@ export const ptContent: SiteContent = {
         },
         {
           title: 'Signature',
-          price: 'By proposal',
+          price: 'Sob proposta',
           description: 'Para viagens complexas, significativas ou com alto custo de erro.',
           includes: [
             'Design completo da viagem',
@@ -158,7 +159,7 @@ export const ptContent: SiteContent = {
       title: 'O diagnóstico define o escopo certo. Não entrega planejamento gratuito.',
       description:
         'Em 20 minutos, avaliamos destino, prazo, orçamento, viajantes, complexidade e nível de suporte necessário. Depois da conversa, você recebe uma recomendação objetiva: Blueprint, Full Design, Signature — ou a orientação de que este não é o momento certo para trabalharmos juntos.',
-      cta: 'Agendar Diagnóstico de Escopo',
+      cta: 'Solicitar Diagnóstico de Escopo',
     },
 
     faq: {
@@ -166,7 +167,7 @@ export const ptContent: SiteContent = {
       items: [
         {
           q: 'Isso é uma agência de viagem?',
-          a: 'Não no sentido tradicional. Pelissari Travel Design é um estúdio de planejamento e design de viagem. A primeira entrega é clareza: rota, ritmo, decisões críticas e ordem de reserva. Booking support pode ser adicionado conforme o escopo.',
+          a: 'Não no sentido tradicional. ELUZA é um estúdio de planejamento e design de viagem. A primeira entrega é clareza: rota, ritmo, decisões críticas e ordem de reserva. O suporte de reservas pode ser adicionado conforme o escopo.',
         },
         {
           q: 'O Blueprint inclui reservas?',
@@ -181,22 +182,22 @@ export const ptContent: SiteContent = {
           a: 'Sim. Clientes de Blueprint podem evoluir para Full Design quando desejam apoio para transformar a estrutura aprovada em reservas e organização pré-viagem.',
         },
         {
-          q: 'Vocês garantem upgrades, perks ou disponibilidade?',
-          a: 'Não. Benefícios e disponibilidade dependem de hotéis, fornecedores, datas e regras de cada reserva. Quando booking support é contratado, algumas reservas podem ser feitas por canais profissionais quando apropriado, mas perks nunca são a promessa principal.',
+          q: 'Vocês garantem upgrades, benefícios ou disponibilidade?',
+          a: 'Não. Benefícios e disponibilidade dependem de hotéis, fornecedores, datas e regras de cada reserva. Quando o suporte de reservas é contratado, algumas reservas podem ser feitas por canais profissionais quando apropriado, mas benefícios nunca são a promessa principal.',
         },
         {
           q: 'O diagnóstico é uma consultoria gratuita?',
-          a: 'Não. O diagnóstico é uma conversa curta para entender fit, escopo e nível de suporte. Nenhuma rota, hotel ou recomendação específica é entregue nessa etapa.',
+          a: 'Não. O diagnóstico é uma conversa curta para entender compatibilidade, escopo e nível de suporte. Nenhuma rota, hotel ou recomendação específica é entregue nessa etapa.',
         },
       ],
     },
   },
 
   antesDaReserva: {
-    eyebrow: 'Discovery & Intelligence',
+    eyebrow: 'Descoberta e Inteligência',
     title: 'Antes da Reserva',
     description:
-      'Nossa biblioteca de insights estruturais. Aqui nós desafiamos as premissas tradicionais do mercado de turismo de luxo local. Não compre pacotes baseados em impulsos visuais; compre a sequência correta.',
+      'Nossa biblioteca de insights estruturais. Aqui desafiamos premissas tradicionais do mercado de viagens. Não compre pacotes baseados em impulsos visuais; compre a sequência correta.',
     filters: {
       all: 'Todos os Insights',
       routes: 'Estratégia de Rotas',
@@ -205,9 +206,9 @@ export const ptContent: SiteContent = {
       experiences: 'Experiências',
     },
     card: {
-      readTime: '2 mins ler',
+      readTime: '2 min de leitura',
       commonMistake: 'Erro Comum:',
-      pelissariRead: 'Pelissari Read:',
+      pelissariRead: 'Leitura ELUZA:',
       decision: 'Decisão Pré-Reserva Recomendada:',
       share: 'Compartilhar',
       copied: 'Copiado para WhatsApp',
@@ -217,7 +218,7 @@ export const ptContent: SiteContent = {
       title: 'Sente incerteza sobre o percurso da sua próxima viagem?',
       description:
         'Nós podemos calibrar estas variáveis para o seu caso de forma personalizada. Nossos designers operam com clareza objetiva, isolando você de conselhos amadores e arrependimentos financeiros pós-reserva.',
-      button: 'Agendar um Diagnóstico',
+      button: 'Solicitar Diagnóstico',
     },
   },
 
@@ -230,7 +231,7 @@ export const ptContent: SiteContent = {
       commonMistake: 'O erro comum',
       whyItSeemsGood: 'Por que parece uma boa decisão',
       whereItFails: 'Onde a viagem começa a falhar',
-      pelissariRead: 'A leitura Pelissari',
+      pelissariRead: 'A leitura ELUZA',
       decisionBeforeBooking: 'A decisão antes da reserva',
       blueprintAppearance: 'Como isso aparece no Blueprint',
     },
@@ -238,12 +239,12 @@ export const ptContent: SiteContent = {
 
   blueprint: {
     intro: {
-      eyebrow: 'VISUAL PROOF OF METHOD',
-      title: 'How a trip becomes a decision system.',
-      p1: 'This sample Blueprint shows how Pelissari Travel Design turns an open-ended trip idea into a structured travel decision: route sequence, pacing, hotel-area logic, trade-offs, omissions, and booking order.',
-      p2: 'It is not a generic itinerary. It is a planning document built to help the traveler understand what to book, what to skip, what to delay, and where the trip can fail before money is committed.',
-      note: 'Sample content is sanitized. Names, booking references, supplier details, and private client information are omitted.',
-      ctaMain: 'Agendar Diagnóstico de Escopo',
+      eyebrow: 'PROVA VISUAL DO MÉTODO',
+      title: 'Como uma viagem se torna um sistema de decisões.',
+      p1: 'Este Blueprint de exemplo mostra como a ELUZA transforma uma ideia aberta de viagem em uma decisão estruturada: sequência, ritmo, lógica de hospedagem, trade-offs, omissões e ordem de reserva.',
+      p2: 'Não é um roteiro genérico. É um documento de planejamento que esclarece o que reservar, o que retirar, o que adiar e onde a viagem pode falhar antes do compromisso financeiro.',
+      note: 'O conteúdo de exemplo foi sanitizado. Nomes, referências de reserva, fornecedores e dados privados foram omitidos.',
+      ctaMain: 'Solicitar Diagnóstico',
       ctaSecondary: 'Ver Achados Antes da Reserva',
     },
 
@@ -276,21 +277,21 @@ export const ptContent: SiteContent = {
     },
 
     proof: {
-      title: 'O que este sample prova',
+      title: 'O que este exemplo prova',
       description:
         'O valor do Blueprint não está em listar recomendações. Está em tornar visível o raciocínio por trás da viagem: onde começar, onde desacelerar, onde concentrar esforço, onde não gastar energia e quais decisões precisam vir antes das reservas.',
       cta: 'Criar meu Blueprint',
     },
 
     sample: {
-      eyebrow: 'Visual Method Proof',
-      title: 'Japan: The Pragmatic Approach to a High-Intensity First Trip',
+      eyebrow: 'Prova Visual do Método',
+      title: 'Japão: uma abordagem pragmática para a primeira viagem',
       description:
         'Mapeamento logístico real resolvendo os maiores gargalos de fadiga térmica, fusão de fusos horários e sobreposição de experiências para viagens de 14 dias em solo japonês.',
     },
 
     context: {
-      title: 'Trip Context',
+      title: 'Contexto da Viagem',
       travelers: { label: 'Viajantes:', value: 'Casal (Primeira vez no Japão)' },
       duration: { label: 'Duração total:', value: '14 Dias / 13 Noites' },
       profile: {
@@ -301,7 +302,7 @@ export const ptContent: SiteContent = {
     },
 
     bookingOrder: {
-      title: 'Booking Order Strategy',
+      title: 'Estratégia de Ordem de Reserva',
       phases: [
         {
           label: 'Fase 1 (Precedência Imediata)',
@@ -311,7 +312,7 @@ export const ptContent: SiteContent = {
         },
         {
           label: 'Fase 2 (6 Meses antes)',
-          title: 'Kyoto & Tokyo Hubs',
+          title: 'Bases de Kyoto e Tóquio',
           description: 'Definição dos hotéis das duas bases metropolitanas principais.',
         },
         {
@@ -323,7 +324,7 @@ export const ptContent: SiteContent = {
     },
 
     riskFlags: {
-      title: 'Risk Flags Mapeados',
+      title: 'Riscos Mapeados',
       items: [
         {
           title: '• Logística de Malas:',
@@ -336,7 +337,7 @@ export const ptContent: SiteContent = {
             'O transporte de ônibus públicos em Kyoto sofre de superlotação severa. O planejamento de rotas de visitas precisa privilegiar linhas ferroviárias privadas ou rotas à pé nas madrugadas.',
         },
         {
-          title: '• Overload de Menu Kaiseki:',
+          title: '• Excesso de Menus Kaiseki:',
           description:
             'Agendar degustações pesadas todas as noites induz cansaço de paladar ocidental. Misturamos izakayas informais no planejamento.',
         },
@@ -351,7 +352,7 @@ export const ptContent: SiteContent = {
     },
 
     sequence: {
-      title: 'Destination & Density Sequence',
+      title: 'Sequência de Destinos e Densidade',
       densityLabel: 'Densidade de Fluxo:',
       areaLabel: 'Diretriz da Região & Bairro:',
       stops: [
@@ -370,11 +371,11 @@ export const ptContent: SiteContent = {
             'Esta parada é o âncora estrutural do meio da viagem para amortizar o cansaço. Reserve seu Ryokan clássico aqui.',
         },
         {
-          name: 'Tokyo',
+          name: 'Tóquio',
           days: 'Dias 9-14',
           desc: 'Clímax da viagem. Modernidade extrema, alta gastronomia internacional, compras premium em Aoyama/Omotesando e grandes museus de arte digital contemporânea.',
           guidance:
-            'Default Marunouchi/Otemachi para luxo corporativo silencioso, ou Minami-Aoyama para proximidade a estúdio de design. Evite hospedar-se em Shinjuku se você deseja silêncio acústico.',
+            'Priorize Marunouchi/Otemachi para silêncio e eficiência, ou Minami-Aoyama para proximidade a estúdios de design. Evite Shinjuku se o silêncio acústico for essencial.',
         },
       ],
     },
@@ -401,19 +402,19 @@ export const ptContent: SiteContent = {
       title: 'Crie o Blueprint sob medida da sua próxima viagem',
       description:
         'O Japão é apenas uma das dezenas de sequências complexas que dominamos de forma cirúrgica. Eliminamos o ruído das opiniões soltas e desenhamos a ordem impecável antes que você assine contratos de reserva.',
-      cta: 'Fazer Meu Diagnóstico de Escopo',
+      cta: 'Solicitar Diagnóstico de Escopo',
     },
   },
 
   modal: {
     eyebrow: 'Avaliação de escopo',
-    title: 'Agendar Diagnóstico',
+    title: 'Solicitar Diagnóstico',
     closeLabel: 'Fechar diagnóstico',
-    info: 'Nenhuma decisão, rota ou reserva é feita nesta etapa. O diagnóstico serve para avaliar escopo, complexidade e fit antes de qualquer recomendação específica.',
+    info: 'Nenhuma decisão, rota ou reserva é feita nesta etapa. O diagnóstico serve para avaliar escopo, complexidade e compatibilidade antes de qualquer recomendação específica.',
     success: {
       title: 'Solicitação recebida.',
       description:
-        'Recebemos seu diagnóstico inicial. Se houver fit, você receberá os próximos passos por email ou WhatsApp para agendar a conversa de escopo.',
+        'Recebemos seu diagnóstico inicial. Se houver compatibilidade, você receberá os próximos passos por email ou WhatsApp para agendar a conversa de escopo.',
       button: 'Concluir',
     },
     form: {
@@ -442,10 +443,42 @@ export const ptContent: SiteContent = {
       submit: 'Solicitar Diagnóstico',
       submitting: 'Enviando...',
       errorPrefix: 'Não foi possível enviar sua solicitação agora. Tente novamente em alguns minutos ou escreva para',
-      errorEmail: 'contato@pelissari.travel',
+      errorEmail: 'josepelissari@jppelissari.com',
       sectionAbout: 'Sobre você',
       sectionTrip: 'Sobre a viagem',
       sectionContext: 'Contexto e decisões',
     },
+  },
+
+  clientAccess: {
+    eyebrow: 'Área do Cliente',
+    title: 'Acesso do Cliente',
+    subtitle: 'Acesso privado aos seus documentos de design de viagem, blueprint e entrega da viagem.',
+    panel: {
+      title: 'Inserir chave de acesso',
+      microcopy:
+        'Chaves temporárias serão usadas para entregas privadas. Este protótipo mostra a estrutura futura de acesso.',
+      placeholder: 'Chave de acesso',
+      button: 'Continuar',
+    },
+    deliveriesTitle: 'Entregas disponíveis',
+    deliveries: [
+      {
+        title: 'Trip Design Blueprint',
+        description:
+          'Rota, ritmo, áreas de hospedagem, prioridades e ordem de reserva antes do compromisso financeiro.',
+      },
+      {
+        title: 'Full Design',
+        description:
+          'Uma entrega mais completa com shortlist de hotéis, orientação de experiências, estrutura pré-viagem e suporte de reserva quando escopado.',
+      },
+      {
+        title: 'Signature Travel Architecture',
+        description:
+          'Uma entrega seletiva para viagens complexas que exigem coordenação, contingência, suporte definido e estrutura em viagem.',
+      },
+    ],
+    demoLink: 'Ver exemplo de entrega do cliente',
   },
 };

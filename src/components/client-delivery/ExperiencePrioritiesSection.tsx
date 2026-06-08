@@ -17,7 +17,7 @@ const levelConfig: Record<
   protect: {
     icon: <Star size={14} className="text-primary" />,
     border: 'border-primary/20',
-    badge: 'bg-primary text-white',
+    badge: 'bg-bone text-deep-petrol',
     badgeText: experiencePriorityLabel['protect'],
   },
   consider: {
@@ -42,7 +42,7 @@ export default function ExperiencePrioritiesSection({ items }: ExperiencePriorit
       <div className="flex items-start gap-3 mb-2">
         <Star size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Prioridades de Experiência</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Prioridades de Experiência</h2>
           <p className="text-xs text-cool-gray-500 mt-1">O que proteger, o que considerar, o que adiar</p>
         </div>
       </div>
@@ -73,7 +73,7 @@ export default function ExperiencePrioritiesSection({ items }: ExperiencePriorit
                     className={`border rounded-custom p-5 grid grid-cols-1 md:grid-cols-12 gap-4 ${config.border}`}
                   >
                     <div className="md:col-span-4">
-                      <h4 className="font-manrope text-sm font-bold text-primary">{item.name}</h4>
+                      <h4 className="font-sans text-sm font-bold text-primary">{item.name}</h4>
                       <p className="text-xs text-cool-gray-500 mt-1 leading-relaxed">{item.whyItMatters}</p>
                     </div>
                     <div className="md:col-span-4">

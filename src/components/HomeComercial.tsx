@@ -5,6 +5,8 @@ import { FitCallSource, Surface } from '../types';
 import { trackEvent } from '../lib/tracking';
 import { useLanguage } from '../context/LanguageContext';
 import { useIsMobile } from '../hooks/useIsMobile';
+import EditorialVisual from './visual/EditorialVisual';
+import DocumentPreviewPanel from './visual/DocumentPreviewPanel';
 
 interface HomeComercialProps {
   onNavigate: (surface: Surface) => void;
@@ -27,7 +29,7 @@ const fadeUp = {
 };
 
 export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComercialProps) {
-  const { c } = useLanguage();
+  const { c, lang } = useLanguage();
   const isMobile = useIsMobile();
   const h = c.home;
 
@@ -47,36 +49,44 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
     <div className="w-full flex flex-col">
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="py-20 md:py-32 text-center max-w-5xl mx-auto px-4">
-        <motion.div {...fadeUp}>
-          <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.25em] text-cool-gray-500 bg-cool-gray-100 border border-cool-gray-200/60 px-4 py-2 rounded-full inline-block mb-8">
-            {h.hero.badge}
-          </span>
-          <h1 className="font-manrope text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-primary tracking-tight mb-7 leading-[1.05]">
-            {h.hero.title}
-          </h1>
-          <p className="text-sm md:text-base text-cool-gray-600 max-w-2xl mx-auto leading-relaxed mb-10">
-            {h.hero.description}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => onOpenFitCall('home_hero')}
-              className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-black transition-colors"
-            >
-              {h.hero.ctaMain}
-            </button>
-            <button
-              onClick={() => openSampleBlueprint('home_hero')}
-              className="bg-white border border-cool-gray-300 text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-50 transition-colors"
-            >
-              {h.hero.ctaSecondary}
-            </button>
+      <section className="home-hero-section">
+        <motion.div {...fadeUp} className="home-hero-grid">
+          <div>
+            <span className="text-[10px] md:text-xs uppercase font-light tracking-[0.18em] text-stone border-t border-stone/60 pt-3 inline-block mb-10">
+              {h.hero.badge}
+            </span>
+            <h1 className="font-manrope text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal italic text-bone tracking-tight mb-8 leading-[1.03]">
+              {h.hero.title}
+            </h1>
+            <p className="text-sm md:text-base text-bone/80 max-w-2xl leading-relaxed mb-12">
+              {h.hero.description}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => onOpenFitCall('home_hero')}
+                className="bg-bone text-deep-petrol text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-stone transition-colors"
+              >
+                {h.hero.ctaMain}
+              </button>
+              <button
+                onClick={() => openSampleBlueprint('home_hero')}
+                className="bg-transparent border border-stone text-bone text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-paper transition-colors"
+              >
+                {h.hero.ctaSecondary}
+              </button>
+            </div>
           </div>
+          <EditorialVisual
+            variant="arrival"
+            aspect="portrait"
+            eyebrow={lang === 'pt' ? 'Estudo de chegada / 01' : 'Arrival study / 01'}
+            caption={lang === 'pt' ? 'A rota começa antes da primeira reserva.' : 'The route begins before the first reservation.'}
+          />
         </motion.div>
       </section>
 
       {/* ── Problem — visual pillar narrative ────────────────────────── */}
-      <section className="py-20 border-y border-cool-gray-200 bg-cool-gray-50">
+      <section className="py-20 border-b border-stone/40 bg-paper">
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
           <motion.div {...fadeUp} className="mb-12 max-w-3xl">
             <h2 className="font-manrope text-3xl md:text-4xl font-black tracking-tight text-primary leading-[1.1]">
@@ -99,7 +109,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                     style={{ scrollSnapAlign: 'start' }}
                   >
                     <Icon size={18} className="text-primary opacity-70" />
-                    <span className="block font-manrope text-sm font-bold text-primary">{pillar.label}</span>
+                    <span className="block font-sans text-sm font-semibold text-primary">{pillar.label}</span>
                     <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
                   </div>
                 );
@@ -119,7 +129,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                     className="bg-white px-5 py-6 md:py-8 space-y-3 group"
                   >
                     <Icon size={18} className="text-primary opacity-70" />
-                    <span className="block font-manrope text-sm font-bold text-primary">{pillar.label}</span>
+                    <span className="block font-sans text-sm font-semibold text-primary">{pillar.label}</span>
                     <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
                   </motion.div>
                 );
@@ -137,31 +147,21 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
       </section>
 
       {/* ── Visual method ────────────────────────────────────────────── */}
-      <motion.section {...fadeUp} className="px-4 max-w-[1280px] mx-auto w-full py-20 md:py-28">
-        <div className="w-full h-56 md:h-64 bg-cool-gray-100 border border-cool-gray-200 rounded-custom relative overflow-hidden flex flex-col justify-center items-center text-center p-6">
-          <div className="absolute inset-0 grid grid-cols-12 grid-rows-6 opacity-20 pointer-events-none">
-            {Array.from({ length: 72 }).map((_, i) => (
-              <div key={i} className="border-t border-l border-cool-gray-300" />
-            ))}
-          </div>
-          <div className="relative z-10 space-y-3">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-cool-gray-400 block">
-              {h.method.eyebrow}
-            </span>
-            <h2 className="font-manrope text-2xl md:text-3xl font-black text-primary tracking-tight">
-              {h.method.title}
-            </h2>
-            <p className="text-xs text-cool-gray-500 max-w-lg mx-auto leading-relaxed">
-              {h.method.description}
-            </p>
-            <button
-              onClick={() => openSampleBlueprint('home_sample_section')}
-              className="mt-2 text-[10px] uppercase tracking-widest font-bold text-primary inline-flex items-center gap-1 border-b border-primary pb-0.5 hover:opacity-60 transition-opacity"
-            >
-              {h.method.cta} <ArrowRight size={11} />
-            </button>
-          </div>
-        </div>
+      <motion.section id="method" {...fadeUp} className="scroll-mt-24 px-4 max-w-[1280px] mx-auto w-full py-20 md:py-28">
+        <DocumentPreviewPanel
+          eyebrow={h.method.eyebrow}
+          title={h.method.title}
+          description={h.method.description}
+          lines={lang === 'pt'
+            ? ['Sequência e ritmo da rota', 'Lógica de áreas de hospedagem', 'Omissões intencionais e ordem de reserva']
+            : ['Route sequence and pacing', 'Hotel-area logic', 'Intentional omissions and booking order']}
+        />
+        <button
+          onClick={() => openSampleBlueprint('home_sample_section')}
+          className="mt-6 text-[10px] uppercase tracking-widest font-bold text-primary inline-flex items-center gap-1 border-b border-primary pb-0.5 hover:opacity-60 transition-opacity"
+        >
+          {h.method.cta} <ArrowRight size={11} />
+        </button>
       </motion.section>
 
       {/* ── Insights — editorial layout ───────────────────────────────── */}
@@ -189,7 +189,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
             <span className="text-[9px] uppercase tracking-widest font-bold text-cool-gray-400">
               {h.insights.cardLabels.error}
             </span>
-            <h3 className="font-manrope text-xl md:text-2xl font-bold text-primary leading-snug">
+            <h3 className="font-sans text-xl md:text-2xl font-semibold text-primary leading-snug">
               {featured.title}
             </h3>
             <p className="text-sm text-cool-gray-600 leading-relaxed italic">{featured.error}</p>
@@ -220,7 +220,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                 className="border border-cool-gray-200 rounded-custom p-5 flex flex-col gap-3 cursor-pointer bg-white shrink-0 w-72"
                 style={{ scrollSnapAlign: 'start' }}
               >
-                <h3 className="font-manrope text-base font-bold text-primary leading-snug">{insight.title}</h3>
+                <h3 className="font-sans text-base font-semibold text-primary leading-snug">{insight.title}</h3>
                 <div className="space-y-3 flex-1">
                   {([
                     [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
@@ -251,7 +251,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                 onClick={() => openSampleBlueprint('home_achados_card')}
                 className="border border-cool-gray-200 rounded-custom p-6 flex flex-col gap-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
               >
-                <h3 className="font-manrope text-base font-bold text-primary leading-snug">{insight.title}</h3>
+                <h3 className="font-sans text-base font-semibold text-primary leading-snug">{insight.title}</h3>
                 <div className="space-y-3 flex-1">
                   {([
                     [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
@@ -305,7 +305,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                 <div className="space-y-4">
                   <div className="flex items-baseline gap-4">
                     <h3 className="font-manrope text-2xl md:text-3xl font-black text-primary">{service.title}</h3>
-                    <span className="font-manrope text-sm font-bold text-cool-gray-400">{service.price}</span>
+                    <span className="font-sans text-sm font-medium text-cool-gray-400">{service.price}</span>
                   </div>
                   <p className="text-sm text-cool-gray-600 leading-relaxed max-w-xs">{service.description}</p>
                   <button
@@ -355,7 +355,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
 
       {/* ── Diagnostic banner ─────────────────────────────────────────── */}
       <motion.section {...fadeUp} className="max-w-[1280px] mx-auto w-full px-4 md:px-8 py-20">
-        <div className="bg-primary text-white rounded-custom p-10 md:p-16">
+        <div className="home-diagnostic-panel">
           <div className="max-w-3xl">
             <h2 className="font-manrope text-2xl md:text-4xl font-black tracking-tight leading-tight">
               {h.diagnostic.title}
@@ -365,18 +365,19 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
             </p>
             <button
               onClick={() => onOpenFitCall('diagnostic_section')}
-              className="mt-8 bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-100 transition-colors"
+              className="mt-8 bg-bone text-deep-petrol text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-stone transition-colors"
             >
               {h.diagnostic.cta}
             </button>
           </div>
+          <EditorialVisual variant="stillness" aspect="compact" />
         </div>
       </motion.section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────── */}
       <section id="faq" className="scroll-mt-24 py-20 border-t border-cool-gray-200">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          <motion.h2 {...fadeUp} className="font-manrope text-3xl font-black tracking-tight text-primary mb-10">
+          <motion.h2 {...fadeUp} className="font-sans text-3xl font-semibold tracking-tight text-primary mb-10">
             {h.faq.title}
           </motion.h2>
           <div className="divide-y divide-cool-gray-200 border-y border-cool-gray-200">
@@ -389,7 +390,7 @@ export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComerci
                 transition={{ duration: 0.35, delay: i * 0.05 }}
                 className="group py-5"
               >
-                <summary className="font-manrope font-bold text-sm cursor-pointer list-none flex justify-between gap-4 select-none">
+                <summary className="font-sans font-semibold text-sm cursor-pointer list-none flex justify-between gap-4 select-none">
                   {q}
                   <span className="text-cool-gray-400 group-open:rotate-45 transition-transform shrink-0">+</span>
                 </summary>

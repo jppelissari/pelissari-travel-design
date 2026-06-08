@@ -1,11 +1,13 @@
 export interface NavContent {
   openMenu: string;
-  inicio: string;
+  inicio: string;       /* method / home surface label */
   antesDaReserva: string;
-  sampleBlueprint: string;
+  sampleBlueprint: string; /* blueprint label */
   servicos: string;
   faq: string;
-  cta: string;
+  fitCall: string;
+  client: string;       /* CLIENT access link label */
+  cta: string;          /* primary CTA: Request Diagnostic */
 }
 
 export interface FooterContent {
@@ -276,6 +278,26 @@ export interface ModalContent {
   };
 }
 
+export interface ClientDeliveryCard {
+  title: string;
+  description: string;
+}
+
+export interface ClientAccessContent {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  panel: {
+    title: string;
+    microcopy: string;
+    placeholder: string;
+    button: string;
+  };
+  deliveriesTitle: string;
+  deliveries: ClientDeliveryCard[];
+  demoLink: string;
+}
+
 export interface SiteContent {
   nav: NavContent;
   footer: FooterContent;
@@ -284,4 +306,5 @@ export interface SiteContent {
   finding: FindingContent;
   blueprint: BlueprintContent;
   modal: ModalContent;
+  clientAccess: ClientAccessContent;
 }

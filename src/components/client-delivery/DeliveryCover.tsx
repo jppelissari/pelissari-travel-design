@@ -88,7 +88,7 @@ export default function DeliveryCover({ meta, isPrivateMode }: DeliveryCoverProp
             key={i}
             className="flex items-start gap-3 p-4 border border-cool-gray-200 bg-white rounded-custom"
           >
-            <span className="font-manrope text-xs font-black text-cool-gray-300 shrink-0 mt-0.5 w-4 text-right">
+            <span className="font-sans text-xs font-bold text-cool-gray-300 shrink-0 mt-0.5 w-4 text-right">
               {i + 1}
             </span>
             <p className="text-xs text-cool-gray-600 leading-relaxed">{bullet}</p>

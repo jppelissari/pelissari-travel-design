@@ -6,7 +6,7 @@ export default function DeliveryHowToRead() {
     <section className="mb-14 pb-14 border-b border-cool-gray-100">
       <div className="flex items-start gap-3 mb-6">
         <Info size={16} className="text-cool-gray-400 shrink-0 mt-0.5" />
-        <h2 className="font-manrope text-xs uppercase tracking-widest font-bold text-cool-gray-400">
+        <h2 className="font-sans text-xs uppercase tracking-widest font-bold text-cool-gray-400">
           Como ler este documento
         </h2>
       </div>

@@ -10,7 +10,7 @@ export default function ScopeBoundarySection({ scope }: ScopeBoundarySectionProp
   return (
     <section className="mb-14 pb-14 border-b border-cool-gray-100">
       <div className="mb-6">
-        <h2 className="font-manrope text-xl font-black text-primary">Escopo deste Documento</h2>
+        <h2 className="font-sans text-xl font-black text-primary">Escopo deste Documento</h2>
         <p className="text-xs text-cool-gray-500 mt-1">O que está incluído, o que não está, e o que requer escopo adicional</p>
       </div>
 

@@ -71,11 +71,11 @@ export default function StrategicFindingDetail({
                 index < strategicFindingSectionKeys.length - 1 ? 'border-b border-cool-gray-200' : ''
               }`}
             >
-              <span className="font-manrope text-xs font-bold text-cool-gray-400">
+              <span className="font-sans text-xs font-bold text-cool-gray-400">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div>
-                <h2 className="font-manrope text-lg md:text-xl font-bold text-primary">
+                <h2 className="font-sans text-lg md:text-xl font-semibold text-primary">
                   {f.sectionLabels[sectionKey]}
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-cool-gray-600 leading-7">
@@ -95,7 +95,7 @@ export default function StrategicFindingDetail({
           <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">
             {f.diagnosticEyebrow}
           </span>
-          <h2 className="font-manrope text-2xl md:text-3xl font-bold text-primary mt-4 max-w-xl">
+          <h2 className="font-sans text-2xl md:text-3xl font-semibold text-primary mt-4 max-w-xl">
             {f.diagnosticTitle}
           </h2>
           <button

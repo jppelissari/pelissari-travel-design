@@ -39,7 +39,7 @@ export default function RiskAndContingencySection({ flags, serviceTier }: RiskAn
       <div className="flex items-start gap-3 mb-2">
         <AlertTriangle size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Riscos e Contingências</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Riscos e Contingências</h2>
           <p className="text-xs text-cool-gray-500 mt-1">Flags identificados para esta rota e nível de serviço</p>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function RiskAndContingencySection({ flags, serviceTier }: RiskAn
         )}
         {serviceTier === 'full-design' && (
           <p className="text-xs text-cool-gray-500 leading-relaxed max-w-xl">
-            No Full Design, além de identificar os riscos, Pelissari coordena as ações de mitigação pré-partida com fornecedores e confirmações diretas.
+            No Full Design, além de identificar os riscos, ELUZA coordena as ações de mitigação pré-partida com fornecedores e confirmações diretas.
           </p>
         )}
         {serviceTier === 'signature' && (
@@ -75,7 +75,7 @@ export default function RiskAndContingencySection({ flags, serviceTier }: RiskAn
                     <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded ${config.badge}`}>
                       {config.label}
                     </span>
-                    <h4 className="font-manrope text-sm font-bold text-primary">{flag.title}</h4>
+                    <h4 className="font-sans text-sm font-bold text-primary">{flag.title}</h4>
                   </div>
                   <p className="text-xs text-cool-gray-600 leading-relaxed">{flag.description}</p>
                   {flag.mitigation && (

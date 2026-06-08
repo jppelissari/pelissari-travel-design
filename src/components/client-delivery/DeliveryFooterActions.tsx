@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, ShieldCheck } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 
 interface DeliveryFooterActionsProps {
   onGeneratePreview: () => void;
@@ -31,20 +31,15 @@ export default function DeliveryFooterActions({
           <button
             onClick={handleClick}
             disabled={clicked}
-            className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-6 py-3 rounded-custom flex items-center gap-2 hover:bg-charcoal transition-all active:scale-[0.98] disabled:opacity-60"
+            className="bg-bone text-deep-petrol text-xs uppercase font-bold tracking-widest px-6 py-3 rounded-custom flex items-center gap-2 hover:bg-stone transition-all active:scale-[0.98] disabled:opacity-60"
           >
             <Share2 size={14} />
             Gerar Preview para Compartilhar
           </button>
           <p className="text-[10px] text-cool-gray-400 leading-relaxed max-w-xs sm:text-right font-sans">
-            O link gerado é privado e seguro. Pode ser compartilhado com parceiros ou familiares para uma visão geral da proposta.
+            A versão compartilhável omite detalhes operacionais e apresenta apenas a lógica central da proposta.
           </p>
         </div>
-      </div>
-
-      <div className="flex items-center justify-center gap-1.5 text-[10px] text-cool-gray-400 uppercase tracking-widest font-sans py-3 border border-cool-gray-100 rounded-custom bg-cool-gray-50">
-        <ShieldCheck size={11} className="text-cool-gray-300" />
-        <span>Documento privado · Dados sensíveis protegidos · Link expira em 90 dias</span>
       </div>
     </div>
   );

@@ -14,7 +14,6 @@ import ShareablePreview from './components/ShareablePreview';
 import FitCallModal from './components/FitCallModal';
 import StrategicFindingDetail from './components/StrategicFindingDetail';
 import BottomNavBar from './components/BottomNavBar';
-import FloatingActionButton from './components/FloatingActionButton';
 import { FitCallSource, Surface, TrackedFitCallLocation } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { trackEvent } from './lib/tracking';
@@ -43,7 +42,7 @@ export default function App() {
   // /acesso unlocks the exclusive access (client-link) surface with privacy off
   const isAcessoPath = _normalizedPath === '/acesso' || _normalizedPath === '/acesso/';
   const initialFinding = !isAcessoPath
-    ? getStrategicFinding(_normalizedPath.replace(/^\/achados\//, '').replace(/\/$/, ''))
+    ? getStrategicFinding(_normalizedPath.replace(/^\/achados\//, '').replace(/\/$/, ''), lang)
     : null;
 
   const [currentSurface, setCurrentSurface] = useState<Surface>(
@@ -73,7 +72,7 @@ export default function App() {
       const normalizedPopPath = popPath.replace(/^\/pt(?=\/|$)/, '') || '/';
       const isAcesso = normalizedPopPath === '/acesso' || normalizedPopPath === '/acesso/';
       const finding = !isAcesso
-        ? getStrategicFinding(normalizedPopPath.replace(/^\/achados\//, '').replace(/\/$/, ''))
+        ? getStrategicFinding(normalizedPopPath.replace(/^\/achados\//, '').replace(/\/$/, ''), lang)
         : null;
       const historySurface = event.state?.surface as Surface | undefined;
 
@@ -90,9 +89,15 @@ export default function App() {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [lang]);
 
-  const onNavigate = (surface: Surface) => {
+  const scrollToSurfaceTop = () => {
+    window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }, 380);
+  };
+
+  const onNavigate = (surface: Surface, preserveSectionScroll = false) => {
     const langPrefix = lang === 'pt' ? '/pt' : '';
 
     if (surface === 'client-link') {
@@ -104,6 +109,7 @@ export default function App() {
       setIsPrivateMode(false);
       setActiveFindingSlug(null);
       setCurrentSurface(surface);
+      if (!preserveSectionScroll) scrollToSurfaceTop();
       return;
     }
 
@@ -114,10 +120,11 @@ export default function App() {
     }
     setActiveFindingSlug(null);
     setCurrentSurface(surface);
+    if (!preserveSectionScroll) scrollToSurfaceTop();
   };
 
   const onOpenFinding = (slug: string) => {
-    const finding = getStrategicFinding(slug);
+    const finding = getStrategicFinding(slug, lang);
     if (!finding) return;
 
     const langPrefix = lang === 'pt' ? '/pt' : '';
@@ -133,6 +140,7 @@ export default function App() {
     );
     setActiveFindingSlug(finding.slug);
     setCurrentSurface('strategic-finding');
+    scrollToSurfaceTop();
   };
 
   const scrollToHomeSection = (sectionId: string, attempt = 0) => {
@@ -151,7 +159,7 @@ export default function App() {
   };
 
   const onNavigateHomeSection = (sectionId: string) => {
-    onNavigate('home');
+    onNavigate('home', true);
     scrollToHomeSection(sectionId);
   };
 
@@ -181,7 +189,7 @@ export default function App() {
           />
         );
       case 'strategic-finding': {
-        const finding = activeFindingSlug ? getStrategicFinding(activeFindingSlug) : undefined;
+        const finding = activeFindingSlug ? getStrategicFinding(activeFindingSlug, lang) : undefined;
         return finding ? (
           <StrategicFindingDetail
             finding={finding}
@@ -223,7 +231,7 @@ export default function App() {
   };
 
   return (
-    <div className="bg-white min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
+    <div className="bg-deep-petrol min-h-screen flex flex-col antialiased selection:bg-bone selection:text-deep-petrol">
       {/* Global Top Navigation Bar — desktop only layout, mobile shows logo only */}
       <TopAppBar
         currentSurface={currentSurface}
@@ -262,13 +270,11 @@ export default function App() {
       {/* ── Mobile-only UI ─────────────────────────────────────── */}
       {isMobile && (
         <>
-          {/* Floating Action Button — Schedule Fit Call */}
-          <FloatingActionButton onClick={() => onOpenFitCall('top_nav')} />
-
           {/* Bottom Navigation Bar */}
           <BottomNavBar
             currentSurface={currentSurface}
             onNavigate={onNavigate}
+            onOpenFitCall={onOpenFitCall}
           />
         </>
       )}

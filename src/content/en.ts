@@ -1,23 +1,22 @@
 import type { SiteContent } from './types';
 
-// English copy — currently mirrors PT while final EN copy is curated.
-// Replace strings here when English copywriting is complete.
 export const enContent: SiteContent = {
   nav: {
     openMenu: 'Open Menu',
-    inicio: 'Home',
+    inicio: 'Method',
     antesDaReserva: 'Before You Book',
-    sampleBlueprint: 'Sample Blueprint',
+    sampleBlueprint: 'Blueprint',
     servicos: 'Services',
     faq: 'FAQ',
-    cta: 'Schedule Diagnostic',
+    fitCall: 'Fit Call',
+    client: 'Client',
+    cta: 'Request Diagnostic',
   },
 
   footer: {
-    tagline: 'Design first. Booking second. Perks third.',
-    taglineMantra:
-      'Mantra para estruturação de itinerários complexos com precisão arquitetônica, garantindo que o design da viagem dite a execução.',
-    safePayments: 'Secure Payment Infrastructure',
+    tagline: 'Travel clarity, before commitment.',
+    taglineMantra: 'Route logic before reservations.',
+    safePayments: 'Planning Before Commitment',
     navTitle: 'Navigation',
     navHome: 'Commercial Home',
     navAntesDaReserva: 'Before You Book',
@@ -32,11 +31,11 @@ export const enContent: SiteContent = {
 
   home: {
     hero: {
-      badge: 'Design first. Booking second.',
-      title: 'Clareza na viagem, antes da reserva.',
+      badge: 'Private Travel Design Studio',
+      title: 'Travel clarity, before commitment.',
       description:
-        'Estruturamos viagens complexas antes de qualquer compromisso com voos, hotéis ou experiências — para que você entenda a rota, o ritmo, os riscos e a ordem certa de reserva antes de gastar errado.',
-      ctaMain: 'Schedule Scope Diagnostic',
+        'We structure complex trips before money is committed to flights, hotels, and reservations — so the route, rhythm, and sequence are clear before anything is booked.',
+      ctaMain: 'Request Diagnostic',
       ctaSecondary: 'View Sample Blueprint',
     },
 
@@ -66,41 +65,41 @@ export const enContent: SiteContent = {
         'Small decisions made early change the entire trip. These are examples of the kind of read we do before any hotel, flight, or experience is confirmed.',
       cardLabels: {
         error: 'Common mistake',
-        read: 'Pelissari Read',
+        read: 'ELUZA Read',
         decision: 'Recommended decision',
         cta: 'See how this appears in the Blueprint',
       },
       seeAll: 'View all strategic findings',
       items: [
         {
-          title: 'O problema de começar o Japão por Tóquio',
-          error: 'Seguir a porta de entrada internacional e iniciar pela cidade mais intensa.',
-          read: 'Depois de um voo longo, o corpo ainda não está pronto para absorver densidade, ruído e deslocamentos complexos.',
-          decision: 'Começar por uma base mais silenciosa e deixar Tóquio para quando o viajante já estiver adaptado.',
+          title: 'The problem with starting Japan in Tokyo',
+          error: 'Treat the international gateway as the automatic first base.',
+          read: 'After a long flight, the body is not ready for maximum density, noise, and complex movement.',
+          decision: 'Begin with a more legible base and place Tokyo when the traveler is physically adapted.',
         },
         {
-          title: 'O custo oculto do overplanning de luxo',
-          error: 'Transformar cada refeição, transfer e experiência em compromisso.',
-          read: 'Excesso de confirmação parece segurança, mas pode eliminar presença, espontaneidade e recuperação física.',
-          decision: 'Separar âncoras reais de espaços intencionalmente livres.',
+          title: 'The hidden cost of overplanning',
+          error: 'Turn every meal, transfer, and experience into a commitment.',
+          read: 'Excess confirmation can look like control while removing presence, flexibility, and recovery.',
+          decision: 'Separate genuine anchors from intentionally open space.',
         },
         {
-          title: 'A armadilha da localização por conveniência',
-          error: 'Escolher hotel apenas por proximidade com pontos turísticos ou estação central.',
-          read: 'A base errada muda o ritmo de todos os dias. Um hotel pode ser excelente e ainda assim estar no lugar errado para aquela viagem.',
-          decision: 'Escolher área por função da viagem, não apenas por mapa.',
+          title: 'The convenience-location trap',
+          error: 'Choose a hotel only for proximity to landmarks or the central station.',
+          read: 'The wrong base changes every day. An excellent hotel can still be wrong for the trip.',
+          decision: 'Choose the area by its function in the trip, not only by the map.',
         },
         {
-          title: 'Quando cidades demais reduzem a qualidade da viagem',
-          error: 'Adicionar mais uma base porque "parece perto" no mapa.',
-          read: 'Cada troca de cidade cobra energia: malas, check-out, transferência, espera, check-in e readaptação.',
-          decision: 'Cortar paradas que não adicionam valor proporcional ao custo físico e logístico.',
+          title: 'When too many cities reduce trip quality',
+          error: 'Add another base because it looks close on the map.',
+          read: 'Every city change consumes energy through packing, transfers, waiting, check-in, and reorientation.',
+          decision: 'Remove stops that do not add value proportional to their physical and logistical cost.',
         },
         {
-          title: 'A experiência certa no dia errado',
-          error: 'Reservar experiências importantes antes de entender o ritmo da rota.',
-          read: 'Uma experiência excelente pode virar obrigação se cair em um dia de chegada, cansaço ou transição pesada.',
-          decision: 'Definir primeiro a cadência da viagem. Depois posicionar experiências âncora nos dias certos.',
+          title: 'The right experience on the wrong day',
+          error: 'Book important experiences before understanding the route rhythm.',
+          read: 'An excellent experience becomes an obligation when placed on an arrival or demanding transition day.',
+          decision: 'Define the trip cadence first, then place anchor experiences on the right days.',
         },
       ],
     },
@@ -160,7 +159,7 @@ export const enContent: SiteContent = {
       title: 'The diagnostic defines the right scope. It does not deliver free planning.',
       description:
         'In 20 minutes, we assess destination, timeline, budget, travelers, complexity, and support level needed. After the call, you receive an objective recommendation: Blueprint, Full Design, Signature — or guidance that this is not the right moment to work together.',
-      cta: 'Schedule Scope Diagnostic',
+      cta: 'Request Scope Diagnostic',
     },
 
     faq: {
@@ -168,7 +167,7 @@ export const enContent: SiteContent = {
       items: [
         {
           q: 'Is this a travel agency?',
-          a: 'Not in the traditional sense. Pelissari Travel Design is a travel planning and design studio. The first deliverable is clarity: route, pacing, critical decisions, and booking order. Booking support can be added depending on scope.',
+          a: 'Not in the traditional sense. ELUZA is a travel planning and design studio. The first deliverable is clarity: route, pacing, critical decisions, and booking order. Booking support can be added depending on scope.',
         },
         {
           q: 'Does the Blueprint include bookings?',
@@ -209,7 +208,7 @@ export const enContent: SiteContent = {
     card: {
       readTime: '2 min read',
       commonMistake: 'Common Mistake:',
-      pelissariRead: 'Pelissari Read:',
+      pelissariRead: 'ELUZA Read:',
       decision: 'Recommended Pre-Booking Decision:',
       share: 'Share',
       copied: 'Copied to WhatsApp',
@@ -219,7 +218,7 @@ export const enContent: SiteContent = {
       title: 'Uncertain about your next trip\'s route?',
       description:
         'We can calibrate these variables for your specific case. Our designers operate with objective clarity, shielding you from amateur advice and post-booking financial regret.',
-      button: 'Schedule a Diagnostic',
+      button: 'Request Diagnostic',
     },
   },
 
@@ -232,7 +231,7 @@ export const enContent: SiteContent = {
       commonMistake: 'The common mistake',
       whyItSeemsGood: 'Why it seems like a good decision',
       whereItFails: 'Where the trip starts to fail',
-      pelissariRead: 'The Pelissari read',
+      pelissariRead: 'The ELUZA read',
       decisionBeforeBooking: 'The decision before booking',
       blueprintAppearance: 'How this appears in the Blueprint',
     },
@@ -242,10 +241,10 @@ export const enContent: SiteContent = {
     intro: {
       eyebrow: 'VISUAL PROOF OF METHOD',
       title: 'How a trip becomes a decision system.',
-      p1: 'This sample Blueprint shows how Pelissari Travel Design turns an open-ended trip idea into a structured travel decision: route sequence, pacing, hotel-area logic, trade-offs, omissions, and booking order.',
+      p1: 'This sample Blueprint shows how ELUZA turns an open-ended trip idea into a structured travel decision: route sequence, pacing, hotel-area logic, trade-offs, omissions, and booking order.',
       p2: 'It is not a generic itinerary. It is a planning document built to help the traveler understand what to book, what to skip, what to delay, and where the trip can fail before money is committed.',
       note: 'Sample content is sanitized. Names, booking references, supplier details, and private client information are omitted.',
-      ctaMain: 'Schedule Scope Diagnostic',
+      ctaMain: 'Request Diagnostic',
       ctaSecondary: 'View Pre-Booking Findings',
     },
 
@@ -288,7 +287,7 @@ export const enContent: SiteContent = {
       eyebrow: 'Visual Method Proof',
       title: 'Japan: The Pragmatic Approach to a High-Intensity First Trip',
       description:
-        'Mapeamento logístico real resolvendo os maiores gargalos de fadiga térmica, fusão de fusos horários e sobreposição de experiências para viagens de 14 dias em solo japonês.',
+        'A real logistics study resolving arrival fatigue, time-zone adjustment, transition load, and experience overlap across a 14-day Japan trip.',
     },
 
     context: {
@@ -403,13 +402,13 @@ export const enContent: SiteContent = {
       title: 'Create the Blueprint tailored to your next trip',
       description:
         'Japan is just one of dozens of complex sequences we handle with surgical precision. We eliminate the noise of scattered opinions and design the flawless order before you sign any booking contracts.',
-      cta: 'Schedule My Scope Diagnostic',
+      cta: 'Request Scope Diagnostic',
     },
   },
 
   modal: {
     eyebrow: 'Scope assessment',
-    title: 'Schedule Diagnostic',
+    title: 'Request Diagnostic',
     closeLabel: 'Close diagnostic',
     info: 'No decision, route, or booking is made at this stage. The diagnostic is to assess scope, complexity, and fit before any specific recommendation.',
     success: {
@@ -444,10 +443,42 @@ export const enContent: SiteContent = {
       submit: 'Request Diagnostic',
       submitting: 'Sending…',
       errorPrefix: 'We could not submit your request right now. Try again in a few minutes or write to',
-      errorEmail: 'contato@pelissari.travel',
+      errorEmail: 'josepelissari@jppelissari.com',
       sectionAbout: 'About you',
       sectionTrip: 'About the trip',
       sectionContext: 'Context & decisions',
     },
+  },
+
+  clientAccess: {
+    eyebrow: 'Client Area',
+    title: 'Client Access',
+    subtitle: 'Private access to your travel design documents, blueprint, and trip delivery.',
+    panel: {
+      title: 'Enter access key',
+      microcopy:
+        'Temporary access keys will be used for private client deliveries. This prototype shows the future access structure.',
+      placeholder: 'Access key',
+      button: 'Continue',
+    },
+    deliveriesTitle: 'Available deliveries',
+    deliveries: [
+      {
+        title: 'Trip Design Blueprint',
+        description:
+          'Decision-ready route, pacing, hotel-area guidance, priorities, and booking order before the client commits.',
+      },
+      {
+        title: 'Full Design',
+        description:
+          'A fuller travel design delivery with hotel shortlist, experience guidance, pre-departure structure, and booking support when scoped.',
+      },
+      {
+        title: 'Signature Travel Architecture',
+        description:
+          'A selective delivery for complex trips requiring coordination, contingency planning, defined support, and live travel structure.',
+      },
+    ],
+    demoLink: 'View Portuguese sample client delivery',
   },
 };

@@ -12,6 +12,7 @@ import {
 import { FitCallSource, Surface } from '../types';
 import { trackEvent } from '../lib/tracking';
 import { useLanguage } from '../context/LanguageContext';
+import EditorialVisual from './visual/EditorialVisual';
 
 interface SampleBlueprintProps {
   onNavigate: (surface: Surface) => void;
@@ -25,7 +26,7 @@ const STOP_ICONS = [
 ];
 
 export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlueprintProps) {
-  const { c } = useLanguage();
+  const { c, lang } = useLanguage();
   const bp = c.blueprint;
 
   const openAchados = () => {
@@ -34,7 +35,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
   };
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-12">
+    <div className="blueprint-page max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-16">
 
       {/* Introduction */}
       <section className="mb-16 border-b border-cool-gray-200 pb-16">
@@ -49,7 +50,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
           <div className="flex flex-col sm:flex-row gap-4 pt-2">
             <button
               onClick={() => onOpenFitCall('sample_blueprint_intro')}
-              className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-black transition-colors"
+              className="bg-bone text-deep-petrol text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-stone transition-colors"
             >
               {bp.intro.ctaMain}
             </button>
@@ -63,16 +64,26 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
         </div>
       </section>
 
+      <EditorialVisual
+        variant="document"
+        aspect="wide"
+        eyebrow={lang === 'pt' ? 'Documento de decisão / interlúdio visual' : 'Decision document / visual interlude'}
+        caption={lang === 'pt'
+          ? 'Um Blueprint torna o raciocínio visível antes que a viagem fique cara de alterar.'
+          : 'A Blueprint makes the reasoning visible before the trip becomes expensive to change.'}
+        className="blueprint-interlude"
+      />
+
       {/* Reading guide */}
       <section className="mb-16">
         <div className="max-w-3xl mb-8">
-          <h2 className="font-manrope text-2xl md:text-3xl font-black text-primary tracking-tight">{bp.reading.title}</h2>
+          <h2 className="font-sans text-2xl md:text-3xl font-semibold text-primary tracking-tight">{bp.reading.title}</h2>
           <p className="text-sm text-cool-gray-600 mt-3 leading-relaxed">{bp.reading.description}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {bp.reading.cards.map(card => (
             <article key={card.title} className="bg-cool-gray-50 border border-cool-gray-200 rounded-custom p-5">
-              <h3 className="font-manrope text-sm font-bold text-primary">{card.title}</h3>
+              <h3 className="font-sans text-sm font-semibold text-primary">{card.title}</h3>
               <p className="text-xs text-cool-gray-600 leading-relaxed mt-3">{card.text}</p>
             </article>
           ))}
@@ -80,14 +91,14 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
       </section>
 
       {/* Proof bridge */}
-      <section className="mb-16 bg-primary text-white rounded-custom p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <section className="mb-16 bg-paper text-bone border-y border-stone/50 p-8 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="max-w-3xl">
-          <h2 className="font-manrope text-2xl md:text-3xl font-black tracking-tight">{bp.proof.title}</h2>
+          <h2 className="font-sans text-2xl md:text-3xl font-semibold tracking-tight">{bp.proof.title}</h2>
           <p className="text-sm text-cool-gray-300 mt-4 leading-relaxed">{bp.proof.description}</p>
         </div>
         <button
           onClick={() => onOpenFitCall('sample_blueprint_proof_bridge')}
-          className="bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-100 transition-colors shrink-0"
+          className="bg-bone text-deep-petrol text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-stone transition-colors shrink-0"
         >
           {bp.proof.cta}
         </button>
@@ -160,7 +171,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
           </div>
 
           {/* Risk Flags */}
-          <div className="bg-neutral-50 border border-cool-gray-200 rounded-custom p-6 space-y-4">
+          <div className="bg-paper border border-cool-gray-200 rounded-custom p-6 space-y-4">
             <h3 className="text-xs uppercase font-bold tracking-widest text-primary flex items-center gap-1.5 border-b border-cool-gray-200 pb-2">
               <AlertTriangle size={14} className="text-primary" />
               {bp.riskFlags.title}
@@ -182,7 +193,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
 
           {/* Route Thesis */}
           <section className="bg-cool-gray-50 border border-cool-gray-200 rounded-custom p-6 md:p-8 space-y-4">
-            <h2 className="font-manrope text-xl md:text-2xl font-black text-primary tracking-tight">
+            <h2 className="font-sans text-xl md:text-2xl font-semibold text-primary tracking-tight">
               {bp.routeThesis.title}
             </h2>
             <div className="text-xs md:text-sm text-cool-gray-600 leading-relaxed space-y-3">
@@ -194,17 +205,17 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
 
           {/* Destination Sequence */}
           <section className="space-y-6">
-            <h2 className="font-manrope text-xl md:text-2xl font-black text-primary tracking-tight border-b border-cool-gray-200 pb-3">
+            <h2 className="font-sans text-xl md:text-2xl font-semibold text-primary tracking-tight border-b border-cool-gray-200 pb-3">
               {bp.sequence.title}
             </h2>
             <div className="relative pl-6 md:pl-8 border-l-2 border-cool-gray-200 space-y-8 ml-3">
               {bp.sequence.stops.map((stop, i) => (
                 <div key={i} className="relative space-y-2">
-                  <span className="absolute -left-[35px] md:-left-[43px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center ring-4 ring-white shadow">
+                  <span className="absolute -left-[35px] md:-left-[43px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center ring-4 ring-deep-petrol shadow">
                     {STOP_ICONS[i]}
                   </span>
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
-                    <h3 className="font-manrope text-base md:text-lg font-bold text-primary">{stop.name}</h3>
+                    <h3 className="font-sans text-base md:text-lg font-semibold text-primary">{stop.name}</h3>
                     <span className="inline-block px-2.5 py-1 rounded-custom bg-cool-gray-100 border border-cool-gray-200 text-[10px] font-bold text-cool-gray-600 uppercase tracking-wider shrink-0">
                       {stop.days}
                     </span>
@@ -232,14 +243,14 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
 
           {/* Omissions */}
           <section className="space-y-4">
-            <h2 className="font-manrope text-xl md:text-2xl font-black text-primary tracking-tight border-b border-cool-gray-200 pb-3">
+            <h2 className="font-sans text-xl md:text-2xl font-semibold text-primary tracking-tight border-b border-cool-gray-200 pb-3">
               {bp.omissions.title}
             </h2>
             <p className="text-xs text-cool-gray-500 italic max-w-xl leading-relaxed">{bp.omissions.description}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {bp.omissions.items.map(item => (
                 <div key={item.title} className="p-5 border border-cool-gray-200 rounded-custom bg-cool-gray-50 space-y-2">
-                  <h4 className="font-manrope text-sm font-bold text-cool-gray-400 line-through decoration-primary decoration-1 underline-offset-4">
+                  <h4 className="font-sans text-sm font-semibold text-cool-gray-400 line-through decoration-primary decoration-1 underline-offset-4">
                     {item.title}
                   </h4>
                   <p className="text-xs text-cool-gray-600 leading-relaxed">{item.description}</p>
@@ -252,7 +263,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
       </div>
 
       {/* Closing CTA */}
-      <section className="mt-16 bg-primary text-white p-8 md:p-12 text-center rounded-custom space-y-6">
+      <section className="mt-16 bg-paper text-bone border-y border-stone/50 p-8 md:p-12 text-center space-y-6">
         <h2 className="font-manrope text-xl md:text-3xl font-black tracking-tight max-w-2xl mx-auto">
           {bp.closing.title}
         </h2>
@@ -262,7 +273,7 @@ export default function SampleBlueprint({ onNavigate, onOpenFitCall }: SampleBlu
         <div>
           <button
             onClick={() => onOpenFitCall('sample_blueprint_bottom')}
-            className="bg-white text-primary text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-custom hover:bg-cool-gray-50 transition-colors"
+            className="bg-bone text-deep-petrol text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-stone transition-colors"
           >
             {bp.closing.cta}
           </button>

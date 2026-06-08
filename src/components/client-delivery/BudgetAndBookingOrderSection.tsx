@@ -29,7 +29,7 @@ export default function BudgetAndBookingOrderSection({
       <div className="flex items-start gap-3 mb-8">
         <DollarSign size={16} className="text-primary shrink-0 mt-0.5" />
         <div>
-          <h2 className="font-manrope text-xl font-black text-primary">Orçamento e Ordem de Reserva</h2>
+          <h2 className="font-sans text-xl font-black text-primary">Orçamento e Ordem de Reserva</h2>
           <p className="text-xs text-cool-gray-500 mt-1">Onde proteger, onde flexibilizar, o que reservar primeiro</p>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function BudgetAndBookingOrderSection({
               }`}
             >
               <div className="col-span-3">
-                <span className="font-manrope text-xs font-bold text-primary">{entry.category}</span>
+                <span className="font-sans text-xs font-bold text-primary">{entry.category}</span>
               </div>
               <div className="col-span-7">
                 <p className="text-xs text-cool-gray-600 leading-relaxed">{entry.guidance}</p>
@@ -79,15 +79,15 @@ export default function BudgetAndBookingOrderSection({
                 entry.canWait ? 'border-cool-gray-100 bg-cool-gray-50/40' : 'border-cool-gray-200 bg-white'
               }`}
             >
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center font-manrope text-xs font-black shrink-0 ${
-                entry.priority <= 2 ? 'bg-primary text-white' : 'bg-cool-gray-100 text-cool-gray-500'
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center font-sans text-xs font-black shrink-0 ${
+                entry.priority <= 2 ? 'bg-bone text-deep-petrol' : 'bg-cool-gray-100 text-cool-gray-500'
               }`}>
                 {entry.priority}
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="font-manrope text-sm font-bold text-primary">{entry.what}</span>
+                  <span className="font-sans text-sm font-bold text-primary">{entry.what}</span>
                   {entry.canWait && (
                     <span className="text-[10px] uppercase tracking-widest font-bold bg-cool-gray-100 text-cool-gray-400 px-1.5 py-0.5 rounded">
                       Pode aguardar

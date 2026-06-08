@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────
 // Client Delivery Template — Data Types & Sample Data
-// P1-B.2 | Pelissari Travel Design
+// P1-B.2 | ELUZA
 // ─────────────────────────────────────────────────────────────────
 
 // ── Privacy Classification ──────────────────────────────────────
@@ -558,7 +558,7 @@ export const sampleDeliveryTemplate: ClientDeliveryTemplate = {
       severity: 'info',
       description: 'Confirmação de guia, transfers e preferências de ryokan deve ser feita 30 dias antes da partida.',
       tiersVisible: ['full-design', 'signature'],
-      mitigation: 'Incluído no escopo Full Design — Pelissari coordena diretamente.',
+      mitigation: 'Incluído no escopo Full Design — ELUZA coordena diretamente.',
     },
     {
       title: 'Suporte em contingências operacionais',
@@ -593,7 +593,7 @@ export const sampleDeliveryTemplate: ClientDeliveryTemplate = {
       {
         item: 'Coordenação pré-partida com fornecedores',
         upgradeTo: 'full-design',
-        note: 'Pelissari negocia e confirma diretamente com ryokan, guias e transfers.',
+        note: 'ELUZA negocia e confirma diretamente com ryokan, guias e transfers.',
       },
       {
         item: 'Suporte durante a viagem e gestão de contingências',
@@ -627,7 +627,7 @@ export const sampleDeliveryTemplate: ClientDeliveryTemplate = {
     {
       id: 'step-upgrade',
       action: 'Considere upgrade para Full Design',
-      detail: 'Se quiser que Pelissari coordene fornecedores e confirme reservas diretamente — o Full Design cobre isso.',
+      detail: 'Se quiser que ELUZA coordene fornecedores e confirme reservas diretamente — o Full Design cobre isso.',
       cta: 'Agendar diagnóstico de upgrade',
       type: 'upgrade',
     },
@@ -635,7 +635,7 @@ export const sampleDeliveryTemplate: ClientDeliveryTemplate = {
       id: 'step-contact',
       action: 'Dúvidas ou dificuldades com este documento?',
       detail: 'Entre em contato antes de tomar qualquer decisão baseada em informação incompleta.',
-      cta: 'Falar com Pelissari',
+      cta: 'Falar com ELUZA',
       type: 'contact',
     },
   ],

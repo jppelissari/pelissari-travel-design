@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Share2, ArrowRight, Clock, AlertCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { FitCallSource } from '../types';
-import { strategicFindings } from '../data/strategicFindings';
+import { getStrategicFindings } from '../data/strategicFindings';
 import { useLanguage } from '../context/LanguageContext';
 
 interface AntesDaReservaProps {
@@ -18,8 +18,9 @@ const fadeUp = {
 };
 
 export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDaReservaProps) {
-  const { c } = useLanguage();
+  const { c, lang } = useLanguage();
   const a = c.antesDaReserva;
+  const strategicFindings = getStrategicFindings(lang);
 
   const [filter, setFilter] = useState<string>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -29,7 +30,10 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
     : strategicFindings.filter(i => i.categoryId === filter);
 
   const simulateShare = (id: string, title: string) => {
-    const textToCopy = `Pellissari Travel Design - Insight Estratégico:\n\n*${title}*\nConfira o planejamento estrutural antes de reservar sua viagem.\nAcesse: https://pelissari.travel/insights`;
+    const shareUrl = window.location.origin;
+    const textToCopy = lang === 'pt'
+      ? `ELUZA - Achado Estratégico:\n\n*${title}*\nConfira a estrutura antes de reservar sua viagem.\nAcesse: ${shareUrl}`
+      : `ELUZA - Strategic Finding:\n\n*${title}*\nReview the structure before booking the trip.\nVisit: ${shareUrl}`;
     if (navigator.clipboard) navigator.clipboard.writeText(textToCopy);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2500);
@@ -63,7 +67,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
             onClick={() => setFilter(btn.id)}
             className={`px-4 py-2 rounded-custom text-xs uppercase font-bold tracking-wider transition-colors border ${
               filter === btn.id
-                ? 'bg-primary text-white border-primary'
+                ? 'bg-bone text-deep-petrol border-primary'
                 : 'bg-white text-cool-gray-500 border-cool-gray-200 hover:text-primary hover:border-cool-gray-300'
             }`}
           >
@@ -100,11 +104,11 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                       <Clock size={11} /> {a.card.readTime}
                     </span>
                   </div>
-                  <h2 className="font-manrope text-2xl md:text-3xl font-black text-primary leading-tight">
+                  <h2 className="font-sans text-2xl md:text-3xl font-semibold text-primary leading-tight">
                     {featured.title}
                   </h2>
                   <div>
-                    <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-cool-gray-500 flex items-center gap-1 mb-2">
+                    <span className="font-sans text-[10px] uppercase font-semibold tracking-widest text-cool-gray-500 flex items-center gap-1 mb-2">
                       <AlertCircle size={10} className="text-cool-gray-400" />
                       {a.card.commonMistake}
                     </span>
@@ -116,7 +120,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                 {/* Right: pelissari read + decision */}
                 <div className="p-8 md:p-10 space-y-5 bg-cool-gray-50">
                   <div>
-                    <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-2">
+                    <span className="font-sans text-[10px] uppercase font-semibold tracking-widest text-primary block mb-2">
                       {a.card.pelissariRead}
                     </span>
                     <p className="text-sm text-cool-gray-700 font-medium leading-relaxed">
@@ -124,7 +128,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                     </p>
                   </div>
                   <div className="bg-white border border-cool-gray-200 p-5 rounded-custom">
-                    <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-2">
+                    <span className="font-sans text-[10px] uppercase font-semibold tracking-widest text-primary block mb-2">
                       {a.card.decision}
                     </span>
                     <p className="text-sm text-cool-gray-600 leading-relaxed">
@@ -189,7 +193,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                         </span>
                       </div>
 
-                      <h2 className="font-manrope text-lg font-bold text-primary leading-snug">
+                      <h2 className="font-sans text-lg font-semibold text-primary leading-snug">
                         {insight.title}
                       </h2>
 
@@ -197,7 +201,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
 
                       <div className="space-y-3">
                         <div>
-                          <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-cool-gray-500 flex items-center gap-1">
+                          <span className="font-sans text-[10px] uppercase font-semibold tracking-widest text-cool-gray-500 flex items-center gap-1">
                             <AlertCircle size={10} className="text-cool-gray-400" />
                             {a.card.commonMistake}
                           </span>
@@ -206,7 +210,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                           </p>
                         </div>
                         <div>
-                          <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block">
+                          <span className="font-sans text-[10px] uppercase font-semibold tracking-widest text-primary block">
                             {a.card.pelissariRead}
                           </span>
                           <p className="text-xs text-cool-gray-700 font-medium mt-1 leading-relaxed">
@@ -216,7 +220,7 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
                       </div>
 
                       <div className="bg-cool-gray-50 border border-cool-gray-200/70 p-4 rounded-custom text-xs">
-                        <span className="font-manrope text-[10px] uppercase font-black tracking-widest text-primary block mb-1">
+                        <span className="font-sans text-[10px] uppercase font-semibold tracking-widest text-primary block mb-1">
                           {a.card.decision}
                         </span>
                         <p className="text-cool-gray-600 leading-relaxed">{insight.sections.decisionBeforeBooking}</p>
@@ -256,12 +260,12 @@ export default function AntesDaReserva({ onOpenFinding, onOpenFitCall }: AntesDa
         className="mt-20 grid md:grid-cols-[1fr_auto] gap-8 items-center border-t border-cool-gray-200 pt-12"
       >
         <div className="space-y-2">
-          <h3 className="font-manrope text-xl font-bold text-primary">{a.cta.title}</h3>
+          <h3 className="font-sans text-xl font-semibold text-primary">{a.cta.title}</h3>
           <p className="text-sm text-cool-gray-600 max-w-xl leading-relaxed">{a.cta.description}</p>
         </div>
         <button
           onClick={() => onOpenFitCall('antes_da_reserva')}
-          className="bg-primary text-white text-xs uppercase font-bold tracking-widest px-7 py-4 rounded-custom hover:bg-black transition-colors shrink-0"
+          className="bg-bone text-deep-petrol text-xs uppercase font-bold tracking-widest px-7 py-4 rounded-custom hover:bg-stone transition-colors shrink-0"
         >
           {a.cta.button}
         </button>
