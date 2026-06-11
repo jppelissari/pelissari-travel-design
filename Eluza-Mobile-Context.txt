@@ -1,0 +1,2070 @@
+# CONTEXTO DE ENGENHARIA: ELUZA MOBILE (REACT NATIVE + EXPO)
+Projeto: Migração de Web App (React/Vite/Tailwind) para App Mobile Nativo (Premium UX / $1.500 USD Ticket).
+Objetivo: Preservar a Trust Architecture, tipografia editorial e paleta de cores neutras, adaptando o Bento UI para navegação fluida em dispositivos móveis.
+
+## 1. DEPENDÊNCIAS E INFRAESTRUTURA ATUAL (package.json)
+{
+  "name": "react-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist server.js",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "lucide-react": "^0.546.0",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^6.2.3",
+    "express": "^4.21.2",
+    "dotenv": "^17.2.3",
+    "motion": "^12.23.24"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3",
+    "@types/express": "^4.17.21"
+  }
+}
+
+## 2. DESIGN TOKENS E ESTILIZAÇÃO GLOBAL (index.css)
+@import "tailwindcss";
+
+@theme {
+  /* ── Fonts ──────────────────────────────────────────────────────── */
+  --font-editorial: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-manrope: "Cormorant Garamond", Georgia, "Times New Roman", serif; /* legacy alias → editorial */
+  --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  /* ── Brand colors ───────────────────────────────────────────────── */
+  --color-primary: #f6f1ed;
+  --color-bone: #f6f1ed;
+  --color-deep-petrol: #091d1e;
+  --color-brand-black: #091d1e;
+  --color-charcoal: #112a2b;
+  --color-paper: #112a2b;
+  --color-stone: #8c857b;
+  --color-warm-gray-50: #112a2b;
+  --color-warm-gray-100: #112a2b;
+  --color-warm-gray-200: #8c857b;
+  --color-warm-gray-300: #8c857b;
+  --color-warm-gray-400: #8c857b;
+  --color-warm-gray-500: #8c857b;
+  --color-cool-gray-50: #112a2b;
+  --color-cool-gray-100: #112a2b;
+  --color-cool-gray-200: #8c857b;
+  --color-cool-gray-300: #8c857b;
+  --color-cool-gray-400: #8c857b;
+  --color-cool-gray-500: #8c857b;
+  --color-cool-gray-600: #f6f1ed;
+  --color-cool-gray-700: #f6f1ed;
+
+  --radius-custom: 0.125rem;
+}
+
+/* ── Typography tokens ──────────────────────────────────────────── */
+:root {
+  --font-editorial: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --text-hero-xl: clamp(4.5rem, 11vw, 9rem);
+  --leading-hero-xl: 0.88;
+  --tracking-hero-xl: -0.045em;
+
+  --text-hero: clamp(3.25rem, 7vw, 6.5rem);
+  --leading-hero: 0.94;
+  --tracking-hero: -0.035em;
+
+  --text-editorial: clamp(2.4rem, 5vw, 4.5rem);
+  --leading-editorial: 1.02;
+  --tracking-editorial: -0.025em;
+
+  --text-h1: clamp(2.75rem, 5.5vw, 5rem);
+  --leading-h1: 1.02;
+  --tracking-h1: -0.03em;
+
+  --text-h2: clamp(2rem, 3.6vw, 3.25rem);
+  --leading-h2: 1.08;
+  --tracking-h2: -0.025em;
+
+  --text-h3: clamp(1.35rem, 2.2vw, 2rem);
+  --leading-h3: 1.18;
+  --tracking-h3: -0.015em;
+
+  --text-h4: clamp(1.05rem, 1.4vw, 1.25rem);
+  --leading-h4: 1.32;
+  --tracking-h4: -0.01em;
+
+  --text-body-lg: clamp(1.125rem, 1.4vw, 1.25rem);
+  --leading-body-lg: 1.62;
+  --tracking-body-lg: -0.005em;
+
+  --text-body: 1rem;
+  --leading-body: 1.68;
+  --tracking-body: 0em;
+
+  --text-body-sm: 0.9rem;
+  --leading-body-sm: 1.58;
+  --tracking-body-sm: 0em;
+
+  --text-caption: 0.78rem;
+  --leading-caption: 1.45;
+  --tracking-caption: 0.01em;
+
+  --text-label: 0.68rem;
+  --leading-label: 1.2;
+  --tracking-label: 0.16em;
+
+  --text-nav: 0.82rem;
+  --leading-nav: 1.2;
+  --tracking-nav: 0.02em;
+
+  --text-button: 0.82rem;
+  --leading-button: 1;
+  --tracking-button: 0.06em;
+
+  --text-wordmark: clamp(1.15rem, 2vw, 1.5rem);
+  --leading-wordmark: 1;
+  --tracking-wordmark: 0.16em;
+}
+
+/* ── Mobile typography overrides ───────────────────────────────── */
+@media (max-width: 640px) {
+  :root {
+    --text-hero-xl: clamp(3.6rem, 18vw, 5.4rem);
+    --leading-hero-xl: 0.9;
+
+    --text-hero: clamp(3rem, 14vw, 4.6rem);
+    --leading-hero: 0.95;
+
+    --text-h1: clamp(2.4rem, 11vw, 3.8rem);
+    --leading-h1: 1;
+
+    --text-h2: clamp(1.85rem, 8vw, 2.75rem);
+    --leading-h2: 1.08;
+
+    --text-body-lg: 1.08rem;
+    --leading-body-lg: 1.58;
+
+    --text-body: 1rem;
+    --leading-body: 1.62;
+  }
+}
+
+/* ── Print / PDF tokens ─────────────────────────────────────────── */
+@media print {
+  :root {
+    --print-display: 42pt;
+    --print-h1: 30pt;
+    --print-h2: 21pt;
+    --print-h3: 15pt;
+    --print-body-lg: 12pt;
+    --print-body: 10.5pt;
+    --print-body-sm: 9pt;
+    --print-caption: 8pt;
+    --print-label: 7pt;
+  }
+
+  /* Cover title / editorial statements → Cormorant */
+  .print-cover-title,
+  .print-editorial,
+  [data-print="editorial"] {
+    font-family: var(--font-editorial) !important;
+  }
+
+  /* All operational content → Instrument Sans */
+  body,
+  p, li, td, th, caption,
+  .print-body,
+  [data-print="body"] {
+    font-family: var(--font-sans) !important;
+    font-size: var(--print-body);
+    line-height: 1.55;
+  }
+
+  /* Prevent orphaned headings and broken tables */
+  h2, h3, h4 { page-break-after: avoid; }
+  table { page-break-inside: avoid; }
+  tr { page-break-inside: avoid; }
+}
+
+/* ── Semantic typography classes ────────────────────────────────── */
+@layer components {
+  .wordmark,
+  .logo,
+  .eluza-wordmark {
+    font-family: var(--font-editorial);
+    font-size: var(--text-wordmark);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-wordmark);
+    letter-spacing: var(--tracking-wordmark);
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: var(--font-editorial);
+    font-size: var(--text-hero);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-hero);
+    letter-spacing: var(--tracking-hero);
+  }
+
+  .editorial-statement {
+    font-family: var(--font-editorial);
+    font-size: var(--text-editorial);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-editorial);
+    letter-spacing: var(--tracking-editorial);
+  }
+
+  .section-title {
+    font-family: var(--font-editorial);
+    font-size: var(--text-h2);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-h2);
+    letter-spacing: var(--tracking-h2);
+  }
+
+  .card-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-h4);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-h4);
+    letter-spacing: var(--tracking-h4);
+  }
+
+  .label,
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-label);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .button,
+  .cta {
+    font-family: var(--font-sans);
+    font-size: var(--text-button);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-button);
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+  }
+
+  .eluza-framed-e {
+    font-family: var(--font-sans);
+    font-weight: var(--weight-regular);
+    letter-spacing: 0;
+  }
+}
+
+/* ── Site header classes ────────────────────────────────────────── */
+@layer components {
+  .site-header {
+    background-color: color-mix(in srgb, #091d1e 96%, transparent);
+    border-bottom: 1px solid rgba(140, 133, 123, 0.22);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .site-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .site-brand-name {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;       /* 13px — restrained, not a hotel logo */
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .site-brand-descriptor {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;       /* 9px — credential line */
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.145em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+    margin-top: 4px;
+    line-height: 1;
+  }
+
+  .site-nav-link {
+    font-family: var(--font-sans);
+    font-size: var(--text-nav);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+    transition: color 0.12s ease;
+    line-height: 1;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .site-nav-link:hover {
+    color: var(--color-primary);
+  }
+
+  .site-nav-link-active {
+    color: var(--color-primary);
+  }
+
+  .site-nav-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--color-primary);
+  }
+
+  .site-header-cta {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;       /* 11px */
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    border: 1px solid rgba(140, 133, 123, 0.45);
+    padding: 0.45rem 0.875rem;
+    border-radius: 0.125rem;
+    white-space: nowrap;
+    transition: border-color 0.12s ease;
+  }
+
+  .site-header-cta:hover {
+    border-color: rgba(246, 241, 237, 0.7);
+  }
+
+  .language-switcher {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;        /* 10px */
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    user-select: none;
+  }
+}
+
+/* ── Base layer ─────────────────────────────────────────────────── */
+@layer base {
+  html {
+    background-color: #091d1e;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    color: #f6f1ed;
+    background-color: #091d1e;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button, nav {
+    font-family: var(--font-sans);
+  }
+}
+
+/* ── Utilities ──────────────────────────────────────────────────── */
+@layer utilities {
+  .bg-white {
+    background-color: #091d1e !important;
+  }
+
+  .text-white {
+    color: #f6f1ed !important;
+  }
+
+  .shadow-sm,
+  .shadow-md,
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl {
+    box-shadow: none !important;
+  }
+
+  .rounded-full {
+    border-radius: 0.125rem !important;
+  }
+}
+
+/* ── Privacy mask ───────────────────────────────────────────────── */
+.privacy-mask {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.privacy-masked {
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ── Rounded / border ───────────────────────────────────────────── */
+.rounded-custom {
+  border-radius: 0.3rem !important;
+}
+
+/* ── Timeline connector ─────────────────────────────────────────── */
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1rem;
+  width: 1px;
+  background-color: #8c857b;
+}
+
+/* ── Reusable editorial visuals ───────────────────────────────── */
+.editorial-visual {
+  margin: 0;
+  min-width: 0;
+}
+
+.editorial-visual-frame {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(140, 133, 123, 0.34);
+  background:
+    linear-gradient(135deg, rgba(246, 241, 237, 0.09), transparent 42%),
+    linear-gradient(180deg, #193536, #0d2425);
+}
+
+.editorial-visual-frame::before,
+.editorial-visual-frame::after {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(246, 241, 237, 0.13);
+}
+
+.editorial-visual-frame::after {
+  inset: auto 8% 13% 28%;
+  height: 1px;
+  border: 0;
+  background: rgba(246, 241, 237, 0.28);
+  box-shadow: 0 -5rem 0 rgba(246, 241, 237, 0.08), 0 -10rem 0 rgba(246, 241, 237, 0.08);
+}
+
+.editorial-visual-wide .editorial-visual-frame { min-height: 19rem; }
+.editorial-visual-portrait .editorial-visual-frame { min-height: 34rem; }
+.editorial-visual-compact .editorial-visual-frame { min-height: 13rem; }
+
+.editorial-visual-arrival .editorial-visual-frame {
+  background:
+    linear-gradient(155deg, transparent 35%, rgba(246, 241, 237, 0.08) 35.2%, transparent 35.6%),
+    linear-gradient(110deg, #1c3939, #0b2021 65%);
+}
+
+.editorial-visual-route .editorial-visual-frame {
+  background:
+    radial-gradient(circle at 18% 67%, #f6f1ed 0 2px, transparent 3px),
+    radial-gradient(circle at 52% 38%, #f6f1ed 0 2px, transparent 3px),
+    radial-gradient(circle at 82% 61%, #f6f1ed 0 2px, transparent 3px),
+    linear-gradient(164deg, transparent 45%, rgba(246, 241, 237, 0.28) 45.2%, transparent 45.6%),
+    #102a2b;
+}
+
+.editorial-visual-document .editorial-visual-frame {
+  background:
+    linear-gradient(90deg, transparent 16%, rgba(246, 241, 237, 0.08) 16.2%, transparent 16.5%),
+    linear-gradient(180deg, #173233, #0d2425);
+}
+
+.editorial-visual-stillness .editorial-visual-frame {
+  background:
+    linear-gradient(90deg, rgba(246, 241, 237, 0.1) 0 1px, transparent 1px) 50% 0 / 22% 100%,
+    linear-gradient(180deg, #183536, #0d2425);
+}
+
+.editorial-visual-index {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(246, 241, 237, 0.45);
+}
+
+.editorial-visual-marker {
+  position: absolute;
+  width: 0.42rem;
+  height: 0.42rem;
+  background: #f6f1ed;
+  opacity: 0.75;
+}
+
+.editorial-visual-marker-a { left: 18%; bottom: 31%; }
+.editorial-visual-marker-b { left: 52%; top: 36%; }
+.editorial-visual-marker-c { right: 17%; bottom: 37%; }
+
+.editorial-visual-caption {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  padding-top: 0.8rem;
+  color: #8c857b;
+}
+
+.editorial-visual-caption span {
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.editorial-visual-caption p {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.document-preview-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  border-block: 1px solid rgba(140, 133, 123, 0.3);
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.document-preview-copy h3 {
+  margin: 0.75rem 0 1rem;
+  max-width: 32rem;
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.document-preview-copy > p {
+  max-width: 34rem;
+  color: #8c857b;
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.document-preview-lines {
+  margin-top: 1.8rem;
+  border-top: 1px solid rgba(140, 133, 123, 0.24);
+}
+
+.document-preview-lines > div {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.8rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(140, 133, 123, 0.18);
+}
+
+.document-preview-lines span,
+.document-preview-lines p {
+  margin: 0;
+  color: #8c857b;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+/* ── Share Preview Mode ───────────────────────────────────────── */
+.share-preview {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 3.5rem 2rem 6rem;
+}
+
+.share-preview-cover {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.75fr);
+  gap: clamp(3rem, 7vw, 7rem);
+  min-height: 42rem;
+  align-items: center;
+  padding-block: 3rem 5rem;
+  border-bottom: 1px solid rgba(140, 133, 123, 0.32);
+}
+
+.share-preview-brand {
+  margin-bottom: clamp(4rem, 9vw, 8rem);
+}
+
+.share-preview-brand span {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.share-preview-brand p {
+  margin: 0.2rem 0 0;
+  color: #8c857b;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.share-preview-cover h1 {
+  margin: 1.25rem 0 1.5rem;
+  max-width: 48rem;
+  font-family: var(--font-editorial);
+  font-size: clamp(3.8rem, 7vw, 7.4rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.share-preview-thesis {
+  max-width: 40rem;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.35rem, 2.3vw, 2rem);
+  line-height: 1.2;
+  color: #f6f1ed;
+}
+
+.share-preview-framing {
+  max-width: 37rem;
+  margin-top: 1.5rem;
+  color: #8c857b;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.share-preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.2rem;
+  margin-top: 2.3rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(140, 133, 123, 0.22);
+}
+
+.share-preview-meta span {
+  color: #8c857b;
+  font-size: 0.62rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.share-preview-section {
+  padding-block: clamp(4.5rem, 8vw, 8rem);
+  border-bottom: 1px solid rgba(140, 133, 123, 0.26);
+}
+
+.share-preview-section-heading {
+  max-width: 40rem;
+  margin-bottom: 3rem;
+}
+
+.share-preview-section-heading-wide { max-width: 51rem; }
+
+.share-preview-section-heading h2,
+.share-preview-route h2,
+.share-preview-protection h2,
+.share-preview-full h2,
+.share-preview-final h2 {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(2.5rem, 5vw, 4.8rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.share-preview-section-heading p {
+  margin-top: 1.2rem;
+  color: #8c857b;
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.share-preview-solve-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-block: 1px solid rgba(140, 133, 123, 0.26);
+}
+
+.share-preview-solve-grid article {
+  padding: 2rem 2rem 2.4rem 0;
+  border-right: 1px solid rgba(140, 133, 123, 0.26);
+}
+
+.share-preview-solve-grid article + article { padding-left: 2rem; }
+.share-preview-solve-grid article:last-child { border-right: 0; }
+.share-preview-solve-grid span { color: #8c857b; font-size: 0.62rem; letter-spacing: 0.15em; }
+.share-preview-solve-grid h3 { margin: 2.5rem 0 0.8rem; font-size: 1rem; font-weight: 600; }
+.share-preview-solve-grid p { margin: 0; color: #8c857b; font-size: 0.76rem; line-height: 1.65; }
+
+.share-preview-route {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: center;
+}
+
+.share-preview-route-copy > p,
+.share-preview-full > div:first-child > p {
+  max-width: 38rem;
+  margin-top: 1.4rem;
+  color: #8c857b;
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+
+.share-preview-route-steps {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 3rem;
+}
+
+.share-preview-route-steps div { min-width: 6rem; }
+.share-preview-route-steps span { display: block; color: #8c857b; font-size: 0.55rem; letter-spacing: 0.13em; }
+.share-preview-route-steps strong { display: block; margin-top: 0.2rem; font-size: 0.75rem; }
+.share-preview-route-steps p { margin: 0.15rem 0 0; color: #8c857b; font-size: 0.64rem; }
+.share-preview-route-steps svg { color: #8c857b; }
+
+.share-preview-decisions {
+  border-top: 1px solid rgba(140, 133, 123, 0.28);
+}
+
+.share-preview-decisions article {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  padding-block: 2.4rem;
+  border-bottom: 1px solid rgba(140, 133, 123, 0.22);
+}
+
+.share-preview-decision-title {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 1rem;
+}
+
+.share-preview-decision-title span { color: #8c857b; font-size: 0.62rem; letter-spacing: 0.13em; }
+.share-preview-decision-title h3 { margin: 0; max-width: 22rem; font-family: var(--font-editorial); font-size: clamp(1.7rem, 3vw, 2.7rem); font-weight: 400; line-height: 1.05; }
+.share-preview-decisions dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 0; }
+.share-preview-decisions dl div { padding-left: 1rem; border-left: 1px solid rgba(140, 133, 123, 0.24); }
+.share-preview-decisions dt { color: #8c857b; font-size: 0.55rem; letter-spacing: 0.13em; text-transform: uppercase; }
+.share-preview-decisions dd { margin: 0.75rem 0 0; font-size: 0.72rem; line-height: 1.6; }
+
+.share-preview-protection,
+.share-preview-full,
+.share-preview-final {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(3rem, 8vw, 8rem);
+  align-items: center;
+}
+
+.share-preview-protection-list,
+.share-preview-full-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem 1.2rem;
+  margin-top: 2rem;
+}
+
+.share-preview-protection-list span,
+.share-preview-full-list span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.6rem;
+  border-bottom: 1px solid rgba(140, 133, 123, 0.2);
+  color: #f6f1ed;
+  font-size: 0.7rem;
+}
+
+.share-preview-full-list { margin-top: 0; }
+.share-preview-full-list span { color: #8c857b; }
+
+.share-preview-final {
+  margin-top: 5rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid rgba(140, 133, 123, 0.38);
+  background: #112a2b;
+}
+
+.share-preview-final svg { margin-bottom: 1.6rem; color: #8c857b; }
+.share-preview-final h2 { max-width: 43rem; font-size: clamp(2.3rem, 4.5vw, 4rem); }
+.share-preview-final button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  justify-self: end;
+  padding: 1rem 1.3rem;
+  border: 1px solid rgba(246, 241, 237, 0.55);
+  color: #f6f1ed;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* ── Supporting page rhythm ───────────────────────────────────── */
+.home-hero-section {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 5rem 2rem 7rem;
+  border-bottom: 1px solid rgba(140, 133, 123, 0.4);
+}
+
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  gap: clamp(3rem, 8vw, 8rem);
+  align-items: center;
+}
+
+.home-diagnostic-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
+  gap: 4rem;
+  align-items: center;
+  padding: clamp(2.5rem, 6vw, 5rem);
+  border-block: 1px solid rgba(140, 133, 123, 0.5);
+  background: #112a2b;
+}
+
+.blueprint-page > section { scroll-margin-top: 6rem; }
+.blueprint-page .blueprint-interlude { margin: 0 0 6rem; }
+.blueprint-page > section + section { margin-top: 1rem; }
+
+.client-access-layout {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 8rem) 2rem;
+}
+
+.client-access-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  column-gap: clamp(4rem, 9vw, 9rem);
+  align-items: start;
+  margin-bottom: 5rem;
+}
+
+.client-access-intro > span,
+.client-access-intro > h1,
+.client-access-intro > p { grid-column: 1; }
+.client-access-intro .document-preview-panel { grid-column: 2; grid-row: 1 / span 4; padding-top: 0; border-top: 0; grid-template-columns: 1fr; gap: 1.7rem; }
+
+.client-access-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 5rem;
+}
+
+.client-access-key-panel,
+.client-access-sample-panel {
+  min-height: 18rem;
+  padding: 2rem;
+  border: 1px solid rgba(140, 133, 123, 0.28);
+}
+
+.client-access-key-panel > svg,
+.client-access-sample-panel > svg { color: #8c857b; margin-bottom: 3rem; }
+.client-access-key-panel h2,
+.client-access-sample-panel h2 { margin: 0.65rem 0 0.8rem; font-family: var(--font-editorial); font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 400; line-height: 1; }
+.client-access-key-panel > p,
+.client-access-sample-panel > p { max-width: 31rem; margin: 0; color: #8c857b; font-size: 0.72rem; line-height: 1.6; }
+.client-access-key-row { display: flex; gap: 0.6rem; margin-top: 2rem; }
+.client-access-key-row input { min-width: 0; flex: 1; padding: 0.8rem; border: 1px solid rgba(140, 133, 123, 0.35); background: transparent; color: #f6f1ed; font-size: 0.72rem; outline: none; }
+.client-access-key-row button,
+.client-access-sample-panel button { display: inline-flex; align-items: center; gap: 0.5rem; color: #f6f1ed; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.client-access-key-row button { padding: 0.8rem 1rem; border: 1px solid rgba(246, 241, 237, 0.5); }
+.client-access-sample-panel button { margin-top: 2rem; padding-bottom: 0.3rem; border-bottom: 1px solid rgba(246, 241, 237, 0.5); }
+
+.client-access-deliveries > h2 {
+  margin-bottom: 1.4rem;
+  color: #8c857b;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.client-access-deliveries > div { border-top: 1px solid rgba(140, 133, 123, 0.25); }
+.client-access-deliveries article { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid rgba(140, 133, 123, 0.2); }
+.client-access-deliveries article > span { color: #8c857b; font-size: 0.6rem; letter-spacing: 0.12em; }
+.client-access-deliveries h3 { margin: 0 0 0.45rem; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+.client-access-deliveries p { max-width: 46rem; margin: 0; color: #8c857b; font-size: 0.72rem; line-height: 1.6; }
+
+.fit-call-modal { max-height: calc(100dvh - 2rem); }
+.fit-call-modal-header { position: sticky; top: 0; z-index: 2; background: #091d1e; }
+.fit-call-modal-body { scrollbar-width: thin; scrollbar-color: rgba(140, 133, 123, 0.45) transparent; }
+.fit-call-modal-body::-webkit-scrollbar { width: 5px; }
+.fit-call-modal-body::-webkit-scrollbar-track { background: transparent; }
+.fit-call-modal-body::-webkit-scrollbar-thumb { background: rgba(140, 133, 123, 0.45); }
+
+@media (max-width: 900px) {
+  .share-preview-cover,
+  .share-preview-route,
+  .share-preview-protection,
+  .share-preview-full,
+  .share-preview-final,
+  .home-hero-grid,
+  .home-diagnostic-panel,
+  .client-access-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .share-preview-cover { min-height: auto; }
+  .share-preview-cover .editorial-visual { max-width: 34rem; }
+  .share-preview-brand { margin-bottom: 4rem; }
+  .share-preview-solve-grid { grid-template-columns: 1fr; }
+  .share-preview-solve-grid article,
+  .share-preview-solve-grid article + article { padding: 1.5rem 0; border-right: 0; border-bottom: 1px solid rgba(140, 133, 123, 0.2); }
+  .share-preview-solve-grid article:last-child { border-bottom: 0; }
+  .share-preview-solve-grid h3 { margin-top: 1.2rem; }
+  .share-preview-decisions article { grid-template-columns: 1fr; }
+  .share-preview-decisions dl { grid-template-columns: 1fr; gap: 1rem; }
+  .share-preview-final button { justify-self: start; }
+  .client-access-intro .document-preview-panel { grid-column: 1; grid-row: auto; margin-top: 3rem; }
+  .client-access-actions { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .share-preview { padding: 1.5rem 1rem 4rem; }
+  .share-preview-cover { gap: 2.5rem; padding-block: 2rem 3.5rem; }
+  .share-preview-cover h1 { font-size: clamp(3.3rem, 17vw, 4.8rem); }
+  .share-preview-cover .editorial-visual-portrait .editorial-visual-frame { min-height: 18rem; }
+  .share-preview-section { padding-block: 3.5rem; }
+  .share-preview-section-heading { margin-bottom: 2rem; }
+  .share-preview-route-steps { align-items: flex-start; gap: 0.7rem; overflow-x: auto; padding-bottom: 0.5rem; }
+  .share-preview-route-steps div { min-width: 5rem; }
+  .share-preview-decision-title { grid-template-columns: 1.7rem 1fr; }
+  .share-preview-protection-list,
+  .share-preview-full-list { grid-template-columns: 1fr; }
+  .share-preview-final { margin-top: 3rem; padding: 2rem 1.25rem; }
+  .share-preview-final button { width: 100%; }
+  .document-preview-panel { grid-template-columns: 1fr; gap: 2rem; }
+  .home-hero-section { padding: 4rem 1rem 5rem; }
+  .home-hero-grid .editorial-visual-portrait .editorial-visual-frame { min-height: 18rem; }
+  .home-diagnostic-panel { gap: 2rem; padding: 2rem 1.25rem; }
+  .client-access-layout { padding: 4rem 1rem; }
+  .client-access-intro { margin-bottom: 3.5rem; }
+  .client-access-actions { margin-bottom: 3.5rem; }
+  .client-access-key-panel,
+  .client-access-sample-panel { min-height: auto; padding: 1.5rem; }
+  .client-access-key-panel > svg,
+  .client-access-sample-panel > svg { margin-bottom: 2rem; }
+  .client-access-key-row { flex-direction: column; }
+  .client-access-key-row button { justify-content: center; }
+  .fit-call-modal { max-height: calc(100dvh - 0.75rem); }
+  .fit-call-modal-header { padding: 1rem 1.1rem; }
+  .fit-call-modal-body { max-height: calc(100dvh - 5rem); padding: 1.25rem 1.1rem 2rem; }
+}
+
+## 3. DEFINIÇÕES DE TIPAGEM (types.ts)
+export type Surface = 'home' | 'antes-da-reserva' | 'strategic-finding' | 'sample-blueprint' | 'client-link' | 'shareable-preview';
+
+export type TrackedFitCallLocation =
+  | 'top_nav'
+  | 'home_hero'
+  | 'services_blueprint'
+  | 'services_full_design'
+  | 'services_signature'
+  | 'diagnostic_section'
+  | 'sample_blueprint_intro'
+  | 'sample_blueprint_proof_bridge';
+
+export type FitCallSource =
+  | TrackedFitCallLocation
+  | 'antes_da_reserva'
+  | 'sample_blueprint_bottom'
+  | 'shareable_preview';
+
+export interface InsightCard {
+  id: string;
+  title: string;
+  category: string;
+  commonMistake: string;
+  pelissariRead: string;
+  decisionBeforeBooking: string;
+}
+
+export interface BlueprintPhase {
+  phase: string;
+  title: string;
+  description: string;
+}
+
+export interface RiskFlag {
+  title: string;
+  highlight: string;
+  description: string;
+}
+
+export interface DestinationStop {
+  stopNumber: number;
+  name: string;
+  days: string;
+  pacing: string;
+  density: number; // 1 to 3
+  guidance: string;
+}
+
+export interface FitCallFormState {
+  name: string;
+  email: string;
+  whatsapp: string;
+  destination: string;
+  dateWindow: string;
+  duration: string;
+  travelers: string;
+  occasion: string;
+  budget: string;
+  alreadyBooked: string;
+  biggestConcern: string;
+  consent: boolean;
+  status: 'idle' | 'submitting' | 'success' | 'error';
+}
+
+## 4. ESTRUTURA DE ROTEAMENTO WEB (App.tsx & main.tsx)
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, useEffect } from 'react';
+import TopAppBar from './components/TopAppBar';
+import Footer from './components/Footer';
+import HomeComercial from './components/HomeComercial';
+import AntesDaReserva from './components/AntesDaReserva';
+import SampleBlueprint from './components/SampleBlueprint';
+import ClientTravelLink from './components/ClientTravelLink';
+import ShareablePreview from './components/ShareablePreview';
+import FitCallModal from './components/FitCallModal';
+import StrategicFindingDetail from './components/StrategicFindingDetail';
+import BottomNavBar from './components/BottomNavBar';
+import { FitCallSource, Surface, TrackedFitCallLocation } from './types';
+import { motion, AnimatePresence } from 'motion/react';
+import { trackEvent } from './lib/tracking';
+import { getStrategicFinding } from './data/strategicFindings';
+import { useLanguage } from './context/LanguageContext';
+import { useIsMobile } from './hooks/useIsMobile';
+
+const trackedFitCallLocations = new Set<TrackedFitCallLocation>([
+  'top_nav',
+  'home_hero',
+  'services_blueprint',
+  'services_full_design',
+  'services_signature',
+  'diagnostic_section',
+  'sample_blueprint_intro',
+  'sample_blueprint_proof_bridge',
+]);
+
+export default function App() {
+  const { lang } = useLanguage();
+  const isMobile = useIsMobile();
+
+  const _rawPath = window.location.pathname;
+  const _normalizedPath = _rawPath.replace(/^\/pt(?=\/|$)/, '') || '/';
+
+  // /acesso unlocks the exclusive access (client-link) surface with privacy off
+  const isAcessoPath = _normalizedPath === '/acesso' || _normalizedPath === '/acesso/';
+  const initialFinding = !isAcessoPath
+    ? getStrategicFinding(_normalizedPath.replace(/^\/achados\//, '').replace(/\/$/, ''), lang)
+    : null;
+
+  const [currentSurface, setCurrentSurface] = useState<Surface>(
+    isAcessoPath ? 'client-link' : initialFinding ? 'strategic-finding' : 'home'
+  );
+  const [activeFindingSlug, setActiveFindingSlug] = useState<string | null>(initialFinding?.slug ?? null);
+  const [isPrivateMode, setIsPrivateMode] = useState<boolean>(!isAcessoPath);
+  const [isFitCallOpen, setIsFitCallOpen] = useState<boolean>(false);
+  const [fitCallSource, setFitCallSource] = useState<FitCallSource>('top_nav');
+
+  // Automatically scroll to top during navigation transitions
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [currentSurface, activeFindingSlug]);
+
+  useEffect(() => {
+    window.history.replaceState(
+      { surface: currentSurface, findingSlug: activeFindingSlug },
+      '',
+      window.location.href,
+    );
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const popPath = window.location.pathname;
+      const normalizedPopPath = popPath.replace(/^\/pt(?=\/|$)/, '') || '/';
+      const isAcesso = normalizedPopPath === '/acesso' || normalizedPopPath === '/acesso/';
+      const finding = !isAcesso
+        ? getStrategicFinding(normalizedPopPath.replace(/^\/achados\//, '').replace(/\/$/, ''), lang)
+        : null;
+      const historySurface = event.state?.surface as Surface | undefined;
+
+      if (isAcesso) {
+        setIsPrivateMode(false);
+        setCurrentSurface('client-link');
+        setActiveFindingSlug(null);
+        return;
+      }
+
+      setActiveFindingSlug(finding?.slug ?? event.state?.findingSlug ?? null);
+      setCurrentSurface(finding ? 'strategic-finding' : historySurface ?? 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [lang]);
+
+  const scrollToSurfaceTop = () => {
+    window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }, 380);
+  };
+
+  const onNavigate = (surface: Surface, preserveSectionScroll = false) => {
+    const langPrefix = lang === 'pt' ? '/pt' : '';
+
+    if (surface === 'client-link') {
+      if (currentSurface !== 'client-link') {
+        window.history.pushState({ surface }, '', `${langPrefix}/acesso`);
+      } else {
+        window.history.replaceState({ surface }, '', `${langPrefix}/acesso`);
+      }
+      setIsPrivateMode(false);
+      setActiveFindingSlug(null);
+      setCurrentSurface(surface);
+      if (!preserveSectionScroll) scrollToSurfaceTop();
+      return;
+    }
+
+    if (currentSurface === 'strategic-finding' || currentSurface === 'client-link') {
+      window.history.pushState({ surface }, '', langPrefix || '/');
+    } else {
+      window.history.replaceState({ surface }, '', window.location.href);
+    }
+    setActiveFindingSlug(null);
+    setCurrentSurface(surface);
+    if (!preserveSectionScroll) scrollToSurfaceTop();
+  };
+
+  const onOpenFinding = (slug: string) => {
+    const finding = getStrategicFinding(slug, lang);
+    if (!finding) return;
+
+    const langPrefix = lang === 'pt' ? '/pt' : '';
+    window.history.replaceState(
+      { surface: currentSurface, findingSlug: activeFindingSlug },
+      '',
+      window.location.href,
+    );
+    window.history.pushState(
+      { surface: 'strategic-finding', findingSlug: finding.slug },
+      '',
+      `${langPrefix}/achados/${finding.slug}`,
+    );
+    setActiveFindingSlug(finding.slug);
+    setCurrentSurface('strategic-finding');
+    scrollToSurfaceTop();
+  };
+
+  const scrollToHomeSection = (sectionId: string, attempt = 0) => {
+    window.requestAnimationFrame(() => {
+      const section = document.getElementById(sectionId);
+
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      if (attempt < 10) {
+        window.setTimeout(() => scrollToHomeSection(sectionId, attempt + 1), 100);
+      }
+    });
+  };
+
+  const onNavigateHomeSection = (sectionId: string) => {
+    onNavigate('home', true);
+    scrollToHomeSection(sectionId);
+  };
+
+  const onOpenFitCall = (source: FitCallSource) => {
+    if (trackedFitCallLocations.has(source as TrackedFitCallLocation)) {
+      trackEvent('cta_fit_call_opened', { location: source });
+    }
+
+    setFitCallSource(source);
+    setIsFitCallOpen(true);
+  };
+
+  const renderActiveSurface = () => {
+    switch (currentSurface) {
+      case 'home':
+        return (
+          <HomeComercial
+            onNavigate={onNavigate}
+            onOpenFitCall={onOpenFitCall}
+          />
+        );
+      case 'antes-da-reserva':
+        return (
+          <AntesDaReserva
+            onOpenFinding={onOpenFinding}
+            onOpenFitCall={onOpenFitCall}
+          />
+        );
+      case 'strategic-finding': {
+        const finding = activeFindingSlug ? getStrategicFinding(activeFindingSlug, lang) : undefined;
+        return finding ? (
+          <StrategicFindingDetail
+            finding={finding}
+            onBack={() => onNavigate('antes-da-reserva')}
+            onOpenFitCall={() => onOpenFitCall('antes_da_reserva')}
+          />
+        ) : null;
+      }
+      case 'sample-blueprint':
+        return (
+          <SampleBlueprint
+            onNavigate={onNavigate}
+            onOpenFitCall={onOpenFitCall}
+          />
+        );
+      case 'client-link':
+        return (
+          <ClientTravelLink
+            onNavigate={onNavigate}
+            isPrivateMode={isPrivateMode}
+            setIsPrivateMode={setIsPrivateMode}
+            onOpenFitCall={() => onOpenFitCall('sample_blueprint_bottom')}
+          />
+        );
+      case 'shareable-preview':
+        return (
+          <ShareablePreview
+            onOpenFitCall={onOpenFitCall}
+          />
+        );
+      default:
+        return (
+          <HomeComercial
+            onNavigate={onNavigate}
+            onOpenFitCall={onOpenFitCall}
+          />
+        );
+    }
+  };
+
+  return (
+    <div className="bg-deep-petrol min-h-screen flex flex-col antialiased selection:bg-bone selection:text-deep-petrol">
+      {/* Global Top Navigation Bar — desktop only layout, mobile shows logo only */}
+      <TopAppBar
+        currentSurface={currentSurface}
+        onNavigate={onNavigate}
+        onNavigateHomeSection={onNavigateHomeSection}
+        onOpenFitCall={onOpenFitCall}
+      />
+
+      {/* Main Content Area — add bottom padding on mobile to clear the bottom nav */}
+      <main
+        className="flex-grow"
+        style={isMobile ? { paddingBottom: 'calc(4rem + env(safe-area-inset-bottom, 0px))' } : undefined}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFindingSlug ?? currentSurface}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full"
+          >
+            {renderActiveSurface()}
+          </motion.div>
+        </AnimatePresence>
+      </main>
+
+      {/* Footer — hidden on mobile (bottom nav takes its place) */}
+      {!isMobile && (
+        <Footer
+          onNavigate={onNavigate}
+          currentSurface={currentSurface}
+        />
+      )}
+
+      {/* ── Mobile-only UI ─────────────────────────────────────── */}
+      {isMobile && (
+        <>
+          {/* Bottom Navigation Bar */}
+          <BottomNavBar
+            currentSurface={currentSurface}
+            onNavigate={onNavigate}
+            onOpenFitCall={onOpenFitCall}
+          />
+        </>
+      )}
+
+      {/* Premium Diagnostic Fit Call Modal */}
+      <FitCallModal
+        isOpen={isFitCallOpen}
+        onClose={() => setIsFitCallOpen(false)}
+        source={fitCallSource}
+      />
+    </div>
+  );
+}
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { LanguageProvider } from './context/LanguageContext';
+
+// Keep development source modules out of the production PWA cache.
+if (!import.meta.env.DEV && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((reg) => {
+        console.log('[SW] Registered:', reg.scope);
+      })
+      .catch((err) => {
+        console.warn('[SW] Registration failed:', err);
+      });
+  });
+}
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  </StrictMode>
+);
+
+## 5. COMPONENTES CORE E BENTO UI ATUAL
+// Arquivo: HomeComercial.tsx
+import React from 'react';
+import { ArrowRight, Check, X, GitBranch, Clock4, MoveRight, MapPin, Scissors } from 'lucide-react';
+import { motion } from 'motion/react';
+import { FitCallSource, Surface } from '../types';
+import { trackEvent } from '../lib/tracking';
+import { useLanguage } from '../context/LanguageContext';
+import { useIsMobile } from '../hooks/useIsMobile';
+import EditorialVisual from './visual/EditorialVisual';
+import DocumentPreviewPanel from './visual/DocumentPreviewPanel';
+
+interface HomeComercialProps {
+  onNavigate: (surface: Surface) => void;
+  onOpenFitCall: (source: FitCallSource) => void;
+}
+
+const SERVICE_FIT_CALL_LOCATIONS = [
+  'services_blueprint',
+  'services_full_design',
+  'services_signature',
+] as const;
+
+const PILLAR_ICONS = [GitBranch, Clock4, MoveRight, MapPin, Scissors];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' } as const,
+  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+};
+
+export default function HomeComercial({ onNavigate, onOpenFitCall }: HomeComercialProps) {
+  const { c, lang } = useLanguage();
+  const isMobile = useIsMobile();
+  const h = c.home;
+
+  const openSampleBlueprint = (location: 'home_hero' | 'home_achados_card' | 'home_sample_section') => {
+    trackEvent('cta_sample_blueprint_opened', { location });
+    onNavigate('sample-blueprint');
+  };
+
+  const openAchados = () => {
+    trackEvent('cta_achados_opened', { location: 'home_achados_section' });
+    onNavigate('antes-da-reserva');
+  };
+
+  const [featured, ...rest] = h.insights.items;
+
+  return (
+    <div className="w-full flex flex-col">
+
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="home-hero-section">
+        <motion.div {...fadeUp} className="home-hero-grid">
+          <div>
+            <span className="text-[10px] md:text-xs uppercase font-light tracking-[0.18em] text-stone border-t border-stone/60 pt-3 inline-block mb-10">
+              {h.hero.badge}
+            </span>
+            <h1 className="font-manrope text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal italic text-bone tracking-tight mb-8 leading-[1.03]">
+              {h.hero.title}
+            </h1>
+            <p className="text-sm md:text-base text-bone/80 max-w-2xl leading-relaxed mb-12">
+              {h.hero.description}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => onOpenFitCall('home_hero')}
+                className="bg-bone text-deep-petrol text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-stone transition-colors"
+              >
+                {h.hero.ctaMain}
+              </button>
+              <button
+                onClick={() => openSampleBlueprint('home_hero')}
+                className="bg-transparent border border-stone text-bone text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-paper transition-colors"
+              >
+                {h.hero.ctaSecondary}
+              </button>
+            </div>
+          </div>
+          <EditorialVisual
+            variant="arrival"
+            aspect="portrait"
+            eyebrow={lang === 'pt' ? 'Estudo de chegada / 01' : 'Arrival study / 01'}
+            caption={lang === 'pt' ? 'A rota começa antes da primeira reserva.' : 'The route begins before the first reservation.'}
+          />
+        </motion.div>
+      </section>
+
+      {/* ── Problem — visual pillar narrative ────────────────────────── */}
+      <section className="py-20 border-b border-stone/40 bg-paper">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+          <motion.div {...fadeUp} className="mb-12 max-w-3xl">
+            <h2 className="font-manrope text-3xl md:text-4xl font-black tracking-tight text-primary leading-[1.1]">
+              {h.problem.title}
+            </h2>
+          </motion.div>
+
+          {/* Five pillars — horizontal scroll on mobile, 5-col grid on desktop */}
+          {isMobile ? (
+            <div
+              className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4"
+              style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+            >
+              {h.problem.pillars.map((pillar, i) => {
+                const Icon = PILLAR_ICONS[i];
+                return (
+                  <div
+                    key={pillar.label}
+                    className="bg-white border border-cool-gray-200 rounded-custom px-5 py-6 space-y-3 shrink-0 w-52"
+                    style={{ scrollSnapAlign: 'start' }}
+                  >
+                    <Icon size={18} className="text-primary opacity-70" />
+                    <span className="block font-sans text-sm font-semibold text-primary">{pillar.label}</span>
+                    <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-cool-gray-200 border border-cool-gray-200 rounded-custom overflow-hidden">
+              {h.problem.pillars.map((pillar, i) => {
+                const Icon = PILLAR_ICONS[i];
+                return (
+                  <motion.div
+                    key={pillar.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                    className="bg-white px-5 py-6 md:py-8 space-y-3 group"
+                  >
+                    <Icon size={18} className="text-primary opacity-70" />
+                    <span className="block font-sans text-sm font-semibold text-primary">{pillar.label}</span>
+                    <p className="text-[11px] text-cool-gray-500 leading-relaxed">{pillar.detail}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+
+          <motion.p
+            {...fadeUp}
+            className="mt-8 text-sm text-cool-gray-600 max-w-xl leading-relaxed"
+          >
+            {h.problem.connector}
+          </motion.p>
+        </div>
+      </section>
+
+      {/* ── Visual method ────────────────────────────────────────────── */}
+      <motion.section id="method" {...fadeUp} className="scroll-mt-24 px-4 max-w-[1280px] mx-auto w-full py-20 md:py-28">
+        <DocumentPreviewPanel
+          eyebrow={h.method.eyebrow}
+          title={h.method.title}
+          description={h.method.description}
+          lines={lang === 'pt'
+            ? ['Sequência e ritmo da rota', 'Lógica de áreas de hospedagem', 'Omissões intencionais e ordem de reserva']
+            : ['Route sequence and pacing', 'Hotel-area logic', 'Intentional omissions and booking order']}
+        />
+        <button
+          onClick={() => openSampleBlueprint('home_sample_section')}
+          className="mt-6 text-[10px] uppercase tracking-widest font-bold text-primary inline-flex items-center gap-1 border-b border-primary pb-0.5 hover:opacity-60 transition-opacity"
+        >
+          {h.method.cta} <ArrowRight size={11} />
+        </button>
+      </motion.section>
+
+      {/* ── Insights — editorial layout ───────────────────────────────── */}
+      <section className="py-16 md:py-20 max-w-[1280px] mx-auto px-4 md:px-8 w-full">
+        <motion.div {...fadeUp} className="max-w-3xl mb-12">
+          <h2 className="font-manrope text-3xl md:text-4xl font-black tracking-tight text-primary">
+            {h.insights.title}
+          </h2>
+          <p className="text-sm text-cool-gray-600 mt-3 leading-relaxed max-w-xl">
+            {h.insights.description}
+          </p>
+        </motion.div>
+
+        {/* Featured card — full width */}
+        <motion.article
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55 }}
+          whileHover={{ y: -2 }}
+          onClick={() => openSampleBlueprint('home_achados_card')}
+          className="border border-cool-gray-200 rounded-custom p-8 md:p-10 mb-6 grid md:grid-cols-[1fr_auto] gap-8 cursor-pointer hover:shadow-md transition-shadow bg-white"
+        >
+          <div className="space-y-5 max-w-2xl">
+            <span className="text-[9px] uppercase tracking-widest font-bold text-cool-gray-400">
+              {h.insights.cardLabels.error}
+            </span>
+            <h3 className="font-sans text-xl md:text-2xl font-semibold text-primary leading-snug">
+              {featured.title}
+            </h3>
+            <p className="text-sm text-cool-gray-600 leading-relaxed italic">{featured.error}</p>
+            <div className="pt-2 border-t border-cool-gray-100">
+              <span className="text-[9px] uppercase tracking-widest font-bold text-primary block mb-2">
+                {h.insights.cardLabels.read}
+              </span>
+              <p className="text-sm text-cool-gray-700 font-medium leading-relaxed">{featured.read}</p>
+            </div>
+          </div>
+          <div className="hidden md:flex items-end">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1 pb-1 border-b border-primary whitespace-nowrap">
+              {h.insights.cardLabels.cta} <ArrowRight size={11} />
+            </span>
+          </div>
+        </motion.article>
+
+        {/* Insight cards — horizontal carousel on mobile, 2×2 grid on desktop */}
+        {isMobile ? (
+          <div
+            className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4"
+            style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+          >
+            {rest.map((insight) => (
+              <article
+                key={insight.title}
+                onClick={() => openSampleBlueprint('home_achados_card')}
+                className="border border-cool-gray-200 rounded-custom p-5 flex flex-col gap-3 cursor-pointer bg-white shrink-0 w-72"
+                style={{ scrollSnapAlign: 'start' }}
+              >
+                <h3 className="font-sans text-base font-semibold text-primary leading-snug">{insight.title}</h3>
+                <div className="space-y-3 flex-1">
+                  {([
+                    [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
+                    [h.insights.cardLabels.decision, insight.decision, 'text-cool-gray-700 font-medium'],
+                  ] as [string, string, string][]).map(([label, text, cls]) => (
+                    <div key={label}>
+                      <span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 mb-1">{label}</span>
+                      <p className={`text-xs leading-relaxed ${cls}`}>{text}</p>
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1 mt-auto">
+                  {h.insights.cardLabels.cta} <ArrowRight size={11} />
+                </span>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {rest.map((insight, i) => (
+              <motion.article
+                key={insight.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: i * 0.08 }}
+                whileHover={{ y: -2 }}
+                onClick={() => openSampleBlueprint('home_achados_card')}
+                className="border border-cool-gray-200 rounded-custom p-6 flex flex-col gap-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
+              >
+                <h3 className="font-sans text-base font-semibold text-primary leading-snug">{insight.title}</h3>
+                <div className="space-y-3 flex-1">
+                  {([
+                    [h.insights.cardLabels.error, insight.error, 'italic text-cool-gray-500'],
+                    [h.insights.cardLabels.decision, insight.decision, 'text-cool-gray-700 font-medium'],
+                  ] as [string, string, string][]).map(([label, text, cls]) => (
+                    <div key={label}>
+                      <span className="block text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 mb-1">{label}</span>
+                      <p className={`text-xs leading-relaxed ${cls}`}>{text}</p>
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-primary flex items-center gap-1 mt-auto">
+                  {h.insights.cardLabels.cta} <ArrowRight size={11} />
+                </span>
+              </motion.article>
+            ))}
+          </div>
+        )}
+
+        <motion.div {...fadeUp} className="mt-10">
+          <button
+            onClick={openAchados}
+            className="text-xs uppercase tracking-widest font-bold text-primary flex items-center gap-2 border-b border-primary pb-1 hover:opacity-60 transition-opacity"
+          >
+            {h.insights.seeAll} <ArrowRight size={12} />
+          </button>
+        </motion.div>
+      </section>
+
+      {/* ── Services — narrative vertical layout ─────────────────────── */}
+      <section id="servicos" className="scroll-mt-24 py-20 border-y border-cool-gray-200">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+          <motion.div {...fadeUp} className="max-w-2xl mb-16">
+            <h2 className="font-manrope text-3xl md:text-4xl font-black tracking-tight text-primary">
+              {h.services.title}
+            </h2>
+            <p className="text-sm text-cool-gray-600 mt-3 leading-relaxed">{h.services.description}</p>
+          </motion.div>
+
+          <div className="space-y-0 divide-y divide-cool-gray-200 border-y border-cool-gray-200">
+            {h.services.items.map((service, idx) => (
+              <motion.div
+                key={service.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="py-12 md:py-14 grid md:grid-cols-[2fr_3fr] gap-10 md:gap-16 items-start group"
+              >
+                {/* Left: identity */}
+                <div className="space-y-4">
+                  <div className="flex items-baseline gap-4">
+                    <h3 className="font-manrope text-2xl md:text-3xl font-black text-primary">{service.title}</h3>
+                    <span className="font-sans text-sm font-medium text-cool-gray-400">{service.price}</span>
+                  </div>
+                  <p className="text-sm text-cool-gray-600 leading-relaxed max-w-xs">{service.description}</p>
+                  <button
+                    onClick={() => onOpenFitCall(SERVICE_FIT_CALL_LOCATIONS[idx])}
+                    className="mt-2 text-[10px] uppercase tracking-widest font-bold text-primary border-b border-primary pb-0.5 inline-flex items-center gap-1 hover:opacity-60 transition-opacity"
+                  >
+                    {service.cta} <ArrowRight size={11} />
+                  </button>
+                </div>
+
+                {/* Right: includes / excludes */}
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 block mb-4">
+                      {h.services.includesLabel}
+                    </span>
+                    <ul className="space-y-3">
+                      {service.includes.map(item => (
+                        <li key={item} className="flex items-start gap-3 text-sm text-cool-gray-700">
+                          <Check size={14} className="shrink-0 mt-0.5 text-primary" />
+                          <span className="leading-snug">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {service.excludes.length > 0 && (
+                    <div>
+                      <span className="text-[9px] uppercase tracking-widest font-bold text-cool-gray-400 block mb-4">
+                        {h.services.excludesLabel}
+                      </span>
+                      <ul className="space-y-2">
+                        {service.excludes.map(item => (
+                          <li key={item} className="flex items-start gap-3 text-sm text-cool-gray-400">
+                            <X size={14} className="shrink-0 mt-0.5" />
+                            <span className="leading-snug">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Diagnostic banner ─────────────────────────────────────────── */}
+      <motion.section {...fadeUp} className="max-w-[1280px] mx-auto w-full px-4 md:px-8 py-20">
+        <div className="home-diagnostic-panel">
+          <div className="max-w-3xl">
+            <h2 className="font-manrope text-2xl md:text-4xl font-black tracking-tight leading-tight">
+              {h.diagnostic.title}
+            </h2>
+            <p className="text-sm text-cool-gray-300 leading-relaxed mt-6 max-w-2xl">
+              {h.diagnostic.description}
+            </p>
+            <button
+              onClick={() => onOpenFitCall('diagnostic_section')}
+              className="mt-8 bg-bone text-deep-petrol text-xs uppercase font-light tracking-[0.16em] px-8 py-4 rounded-custom hover:bg-stone transition-colors"
+            >
+              {h.diagnostic.cta}
+            </button>
+          </div>
+          <EditorialVisual variant="stillness" aspect="compact" />
+        </div>
+      </motion.section>
+
+      {/* ── FAQ ──────────────────────────────────────────────────────── */}
+      <section id="faq" className="scroll-mt-24 py-20 border-t border-cool-gray-200">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <motion.h2 {...fadeUp} className="font-sans text-3xl font-semibold tracking-tight text-primary mb-10">
+            {h.faq.title}
+          </motion.h2>
+          <div className="divide-y divide-cool-gray-200 border-y border-cool-gray-200">
+            {h.faq.items.map(({ q, a }, i) => (
+              <motion.details
+                key={q}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: i * 0.05 }}
+                className="group py-5"
+              >
+                <summary className="font-sans font-semibold text-sm cursor-pointer list-none flex justify-between gap-4 select-none">
+                  {q}
+                  <span className="text-cool-gray-400 group-open:rotate-45 transition-transform shrink-0">+</span>
+                </summary>
+                <p className="text-sm text-cool-gray-600 leading-relaxed mt-4 max-w-3xl">{a}</p>
+              </motion.details>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// Arquivo: StrategicFindingDetail.tsx
+import React, { useEffect } from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+  StrategicFinding,
+  strategicFindingSectionKeys,
+} from '../data/strategicFindings';
+import { trackEvent } from '../lib/tracking';
+import { useLanguage } from '../context/LanguageContext';
+
+interface StrategicFindingDetailProps {
+  finding: StrategicFinding;
+  onBack: () => void;
+  onOpenFitCall: () => void;
+}
+
+export default function StrategicFindingDetail({
+  finding,
+  onBack,
+  onOpenFitCall,
+}: StrategicFindingDetailProps) {
+  const { c } = useLanguage();
+  const f = c.finding;
+
+  useEffect(() => {
+    trackEvent('finding_detail_opened', {
+      slug: finding.slug,
+      location: 'finding_detail',
+    });
+  }, [finding.slug]);
+
+  const handleCta = () => {
+    trackEvent('finding_detail_cta_opened', {
+      slug: finding.slug,
+      location: 'finding_detail',
+    });
+    onOpenFitCall();
+  };
+
+  return (
+    <article className="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-14">
+      <div className="max-w-5xl mx-auto">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-cool-gray-600 hover:text-primary transition-colors mb-12"
+        >
+          <ArrowLeft size={13} />
+          {f.backLabel}
+        </button>
+
+        <header className="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-14 pb-12 md:pb-16 border-b border-cool-gray-200">
+          <div>
+            <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500">
+              {finding.eyebrow}
+            </span>
+          </div>
+          <div className="max-w-3xl">
+            <h1 className="font-manrope text-3xl sm:text-4xl md:text-6xl font-black text-primary tracking-tight leading-[1.08]">
+              {finding.title}
+            </h1>
+            <p className="mt-7 text-base md:text-lg text-cool-gray-600 leading-relaxed max-w-2xl">
+              {finding.shortDeck}
+            </p>
+          </div>
+        </header>
+
+        <div className="max-w-3xl ml-auto">
+          {strategicFindingSectionKeys.map((sectionKey, index) => (
+            <section
+              key={sectionKey}
+              className={`grid sm:grid-cols-[4rem_1fr] gap-4 sm:gap-8 py-10 md:py-14 ${
+                index < strategicFindingSectionKeys.length - 1 ? 'border-b border-cool-gray-200' : ''
+              }`}
+            >
+              <span className="font-sans text-xs font-bold text-cool-gray-400">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h2 className="font-sans text-lg md:text-xl font-semibold text-primary">
+                  {f.sectionLabels[sectionKey]}
+                </h2>
+                <p className="mt-4 text-sm md:text-base text-cool-gray-600 leading-7">
+                  {finding.sections[sectionKey]}
+                </p>
+                {sectionKey === 'blueprintAppearance' && finding.blueprintReference && (
+                  <p className="mt-5 text-[10px] uppercase font-bold tracking-widest text-cool-gray-500">
+                    {f.referenceLabel} {finding.blueprintReference}
+                  </p>
+                )}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <section className="mt-8 md:mt-14 pt-10 md:pt-14 border-t border-primary max-w-3xl ml-auto">
+          <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-cool-gray-500 block">
+            {f.diagnosticEyebrow}
+          </span>
+          <h2 className="font-sans text-2xl md:text-3xl font-semibold text-primary mt-4 max-w-xl">
+            {f.diagnosticTitle}
+          </h2>
+          <button
+            onClick={handleCta}
+            className="mt-7 inline-flex items-center gap-2 border-b border-primary pb-1 text-xs uppercase font-bold tracking-widest text-primary hover:opacity-60 transition-opacity"
+          >
+            {finding.ctaLabel}
+            <ArrowRight size={13} />
+          </button>
+        </section>
+      </div>
+    </article>
+  );
+}
+
+// Arquivo: TopAppBar.tsx
+import React from 'react';
+import { FitCallSource, Surface } from '../types';
+import { useLanguage, type Language } from '../context/LanguageContext';
+
+type NavItemType = 'surface' | 'section' | 'fitcall';
+
+interface NavItem {
+  id: string;
+  label: string;
+  type: NavItemType;
+  surface?: Surface;
+}
+
+interface TopAppBarProps {
+  currentSurface: Surface;
+  onNavigate: (surface: Surface) => void;
+  onNavigateHomeSection: (sectionId: string) => void;
+  onOpenFitCall: (source: FitCallSource) => void;
+}
+
+const CLIENT_LABEL: Record<string, string> = {
+  en: 'Client',
+  pt: 'Cliente',
+};
+
+export default function TopAppBar({
+  currentSurface,
+  onNavigate,
+  onNavigateHomeSection,
+  onOpenFitCall,
+}: TopAppBarProps) {
+  const { lang, setLang, c } = useLanguage();
+
+  const primaryNav: NavItem[] = [
+    { id: 'method',           label: c.nav.inicio,          type: 'section'  },
+    { id: 'sample-blueprint', label: c.nav.sampleBlueprint, type: 'surface', surface: 'sample-blueprint' },
+    { id: 'servicos',         label: c.nav.servicos,        type: 'section'  },
+    { id: 'antes-da-reserva', label: c.nav.antesDaReserva,  type: 'surface', surface: 'antes-da-reserva' },
+    { id: 'fitcall',          label: c.nav.fitCall,         type: 'fitcall'  },
+  ];
+
+  const isActive = (item: NavItem): boolean => {
+    if (item.type === 'surface' && item.surface) {
+      return (
+        currentSurface === item.surface ||
+        (currentSurface === 'strategic-finding' && item.surface === 'antes-da-reserva')
+      );
+    }
+    if (item.id === 'method') return currentSurface === 'home';
+    return false;
+  };
+
+  const handleNav = (item: NavItem) => {
+    if (item.type === 'fitcall') {
+      onOpenFitCall('top_nav');
+    } else if (item.type === 'section') {
+      onNavigateHomeSection(item.id);
+    } else if (item.surface) {
+      onNavigate(item.surface);
+    }
+  };
+
+  const handleLangToggle = (newLang: Language) => {
+    if (newLang === lang) return;
+    setLang(newLang);
+    const path = window.location.pathname;
+    const base = path.replace(/^\/pt(?=\/|$)/, '') || '/';
+    const next =
+      newLang === 'pt'
+        ? base === '/'
+          ? '/pt'
+          : `/pt${base}`
+        : base;
+    window.history.replaceState(window.history.state, '', next);
+  };
+
+  const clientLabel = CLIENT_LABEL[lang] ?? 'Client';
+  const isClientActive = currentSurface === 'client-link';
+
+  return (
+    <header className="site-header w-full top-0 sticky z-50">
+      <div className="max-w-[1280px] mx-auto px-5 lg:px-8 flex items-center justify-between h-[72px] lg:h-[80px]">
+
+        {/* ── Brand ─────────────────────────────────────────── */}
+        <button
+          onClick={() => onNavigate('home')}
+          className="site-brand text-left select-none outline-none focus-visible:ring-1 focus-visible:ring-stone/50 rounded-sm"
+          aria-label="ELUZA — Return to home"
+        >
+          <span className="site-brand-name">ELUZA</span>
+          <span className="site-brand-descriptor">Private Travel Design Studio</span>
+        </button>
+
+        {/* ── Desktop primary nav ───────────────────────────── */}
+        <nav aria-label="Primary" className="hidden lg:flex items-center gap-6 xl:gap-8 h-full">
+          {primaryNav.map((item) => {
+            const active = isActive(item);
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNav(item)}
+                aria-current={active ? 'page' : undefined}
+                className={`site-nav-link${active ? ' site-nav-link-active' : ''}`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* ── Right cluster ─────────────────────────────────── */}
+        <div className="flex items-center gap-3 lg:gap-4">
+
+          {/* CTA — desktop only */}
+          <button
+            onClick={() => onOpenFitCall('top_nav')}
+            className="hidden lg:block site-header-cta"
+          >
+            {c.nav.cta}
+          </button>
+
+          {/* Language toggle — always visible */}
+          <div className="language-switcher">
+            <button
+              onClick={() => handleLangToggle('en')}
+              className={`transition-colors ${lang === 'en' ? 'text-bone' : 'text-stone hover:text-bone'}`}
+            >
+              EN
+            </button>
+            <span className="text-stone/35 mx-1.5 select-none">·</span>
+            <button
+              onClick={() => handleLangToggle('pt')}
+              className={`transition-colors ${lang === 'pt' ? 'text-bone' : 'text-stone hover:text-bone'}`}
+            >
+              PT
+            </button>
+          </div>
+
+          {/* Client access — desktop only, discreet */}
+          <button
+            onClick={() => onNavigate('client-link')}
+            aria-current={isClientActive ? 'page' : undefined}
+            className={`hidden lg:block text-[10px] uppercase font-medium tracking-[0.10em] transition-colors ${
+              isClientActive ? 'text-bone' : 'text-stone/50 hover:text-stone'
+            }`}
+          >
+            {clientLabel}
+          </button>
+
+        </div>
+      </div>
+    </header>
+  );
+}
+
+## RESTRIÇÕES DE ENGENHARIA PARA A IA:
+- O código gerado deve ser estritamente em React Native usando Expo.
+- Substitua elementos HTML (`div`, `span`, `p`) por componentes nativos (`View`, `Text`, `ScrollView`).
+- Utilize `StyleSheet` ou `NativeWind` (Tailwind para React Native) replicando os tokens do `index.css`.
+- Não adicione comentários explicativos ou fillers. Entregue código modular de nível de produção.
+2. O Plano de Execução (Google AI Studio)
+Abra o Google AI Studio. Faça o upload do arquivo Eluza-Mobile-Context.txt
